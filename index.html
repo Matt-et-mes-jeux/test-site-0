@@ -24,7 +24,24 @@
     .tagline{color:var(--muted);font-size:15px;margin-top:4px;font-style:italic}
 
     .controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-top:14px}
-    .controls input,.controls select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e7dccd;background:#fff;color:var(--text);box-shadow:inset 0 1px 0 rgba(0,0,0,.03)}
+    .controls input{
+  width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e7dccd;
+  background:#fff;color:var(--text);box-shadow:inset 0 1px 0 rgba(0,0,0,.03)
+}
+.multi{position:relative;background:#fff;border:1px solid #e7dccd;border-radius:12px;padding:0}
+.multi summary{list-style:none;padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.multi summary::-webkit-details-marker{display:none}
+.multi[open]{box-shadow:var(--shadow)}
+.multi .panel{position:absolute;z-index:30;background:#fff;border:1px solid #eadfce;border-radius:12px;padding:10px;top:calc(100% + 6px);left:0;right:0;display:grid;gap:8px}
+.multi label{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px}
+.multi input[type=checkbox]{accent-color: var(--accent)}
+.multi summary em{color:#7a5a40;font-style:normal;font-weight:700;font-size:12px}
+.multi summary span{font-weight:800;font-size:12px;letter-spacing:.02em;color:#7a5a40}
+
+/* Surbrillance pour le jeu aléatoire */
+.highlight{outline:2px solid var(--accent2);animation:flash 1s ease-in-out 0s 2 alternate;border-radius:var(--radius)}
+@keyframes flash{from{background:#fff4df} to{background:#ffffff}}
+
     .checks{width:100%;padding:10px 12px;border:1px solid #e7dccd;background:#fff;border-radius:12px}
     .checks legend{font-weight:800;font-size:12px;letter-spacing:.02em;color:#7a5a40;margin-bottom:6px}
     .checks .opts{display:flex;flex-wrap:wrap;gap:8px}
@@ -57,56 +74,69 @@
   <header>
     <div class="wrap">
       <div class="brand">
-        <div class="logo" aria-hidden="true">🍻</div>
+      <a href="#" id="homeLink" class="logo" aria-label="Accueil — réinitialiser les filtres">🍻</a>
         <div>
           <h1>Bibliothèque de jeux de bar</h1>
           <div class="tagline">Une ambiance conviviale, des règles simples et du plaisir partagé.</div>
         </div>
       </div>
       <div class="controls" aria-label="Filtres de recherche">
-        <input id="q" type="search" placeholder="Chercher un jeu (ex: fléchettes, dés, sans matériel)" />
-        <fieldset class="checks" id="playersBox">
-          <legend>Joueurs</legend>
-          <div class="opts">
-            <label><input type="checkbox" name="players" value="2">2+</label>
-            <label><input type="checkbox" name="players" value="3">3+</label>
-            <label><input type="checkbox" name="players" value="4">4+</label>
-            <label><input type="checkbox" name="players" value="6">6+</label>
-            <label><input type="checkbox" name="players" value="8">8+</label>
-          </div>
-        </fieldset>
-        <fieldset class="checks" id="durationBox">
-          <legend>Durée</legend>
-          <div class="opts">
-            <label><input type="checkbox" name="duration" value="<10">&lt;10 min</label>
-            <label><input type="checkbox" name="duration" value="10-20">10–20 min</label>
-            <label><input type="checkbox" name="duration" value=">20">&gt;20 min</label>
-          </div>
-        </fieldset>
-        <fieldset class="checks" id="materialBox">
-          <legend>Matériel</legend>
-          <div class="opts">
-            <label><input type="checkbox" name="mat" value="rien">Rien</label>
-            <label><input type="checkbox" name="mat" value="cartes">Cartes</label>
-            <label><input type="checkbox" name="mat" value="dés">Dés</label>
-            <label><input type="checkbox" name="mat" value="fléchettes">Fléchettes</label>
-            <label><input type="checkbox" name="mat" value="billard">Billard</label>
-            <label><input type="checkbox" name="mat" value="baby-foot">Baby-foot</label>
-            <label><input type="checkbox" name="mat" value="gobelets">Gobelets</label>
-            <label><input type="checkbox" name="mat" value="capsules">Capsules</label>
-            <label><input type="checkbox" name="mat" value="totem">Totem</label>
-            <label><input type="checkbox" name="mat" value="sous-bocks">Sous-bocks</label>
-          </div>
-        </fieldset>
-      </div>
+  <input id="q" type="search" placeholder="Chercher un jeu (ex: fléchettes, dés, sans matériel)" />
+
+  <details class="multi" id="playersDDL">
+    <summary><span>Joueurs</span><em id="playersSummary">Tous</em></summary>
+    <div class="panel">
+      <label><input type="checkbox" name="players" value="2">2+</label>
+      <label><input type="checkbox" name="players" value="3">3+</label>
+      <label><input type="checkbox" name="players" value="4">4+</label>
+      <label><input type="checkbox" name="players" value="6">6+</label>
+      <label><input type="checkbox" name="players" value="8">8+</label>
     </div>
-  </header>
+  </details>
+
+  <details class="multi" id="durationDDL">
+    <summary><span>Durée</span><em id="durationSummary">Toutes</em></summary>
+    <div class="panel">
+      <label><input type="checkbox" name="duration" value="<10">&lt;10 min</label>
+      <label><input type="checkbox" name="duration" value="10-20">10–20 min</label>
+      <label><input type="checkbox" name="duration" value=">20">&gt;20 min</label>
+    </div>
+  </details>
+
+  <details class="multi" id="materialDDL">
+    <summary><span>Matériel</span><em id="materialSummary">Tous</em></summary>
+    <div class="panel">
+      <label><input type="checkbox" name="mat" value="rien">Rien</label>
+      <label><input type="checkbox" name="mat" value="cartes">Cartes</label>
+      <label><input type="checkbox" name="mat" value="dés">Dés</label>
+      <label><input type="checkbox" name="mat" value="fléchettes">Fléchettes</label>
+      <label><input type="checkbox" name="mat" value="billard">Billard</label>
+      <label><input type="checkbox" name="mat" value="baby-foot">Baby-foot</label>
+      <label><input type="checkbox" name="mat" value="gobelets">Gobelets</label>
+      <label><input type="checkbox" name="mat" value="capsules">Capsules</label>
+      <label><input type="checkbox" name="mat" value="totem">Totem</label>
+      <label><input type="checkbox" name="mat" value="sous-bocks">Sous-bocks</label>
+    </div>
+  </details>
+</div>
+</div>
+</header>
+
 
   <main class="wrap">
-    <div class="toolbar">
-      <div id="count">0 jeu(x)</div>
-      <a class="btn" href="#proposer">Proposer un jeu</a>
-    </div>
+    <section class="section" id="ephemeride">
+  <h2>Éphéméride</h2>
+  <p id="quote" class="desc">…</p>
+</section>
+
+<div class="toolbar" style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+  <div id="count">0 jeu(x)</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn" id="randomBtn" type="button">Jeu aléatoire</button>
+    <a class="btn" href="#proposer">Proposer un jeu</a>
+  </div>
+</div>
+
 
     <section id="list" class="grid" aria-live="polite"></section>
 
@@ -154,6 +184,50 @@
     const durationChecks = document.querySelectorAll('input[name="duration"]');
     const matChecks = document.querySelectorAll('input[name="mat"]');
     const count = document.getElementById('count');
+    const count = document.getElementById('count');
+    const randomBtn = document.getElementById('randomBtn');
+    const homeLink = document.getElementById('homeLink');
+    const playerChecks = document.querySelectorAll('input[name="players"]');
+    const durationChecks = document.querySelectorAll('input[name="duration"]');
+    const matChecks = document.querySelectorAll('input[name="mat"]');
+
+  // Éphéméride — phrases du jour (échantillon, tu peux en mettre 366)
+  const ephemeridePhrases = [
+  "La meilleure règle du bar : on s'amuse, on partage.",
+  "Aujourd'hui, on découvre un nouveau jeu.",
+  "Un petit défi vaut mieux que mille excuses.",
+  "Rire fort, jouer fair-play.",
+  "Le hasard fait bien les jeux.",
+  "On mélange les équipes, on double le fun.",
+  "La victoire est douce, la revanche encore plus.",
+  "Un tour rapide ? On dit oui !",
+  "Le meilleur matériel, c'est l'envie de jouer.",
+  "On essaye, on rate, on recommence.",
+  "Ce soir, un classique et une nouveauté.",
+  "Le bar est une table de jeu géante.",
+  "Qui perd paye… un sourire.",
+  "On range les téléphones, on sort les dés.",
+  "Une manche courte en appelle une autre.",
+  "On joue pour créer des souvenirs.",
+  "La chance sourit aux audacieux.",
+  "Le secret d'une bonne soirée : de bons partenaires.",
+  "Aujourd'hui, c'est vous le maître du quiz.",
+  "Un peu de stratégie, beaucoup de rires.",
+  "Règles simples, plaisir maximum.",
+  "Le fair-play, c'est la classe.",
+  "Un nouveau jeu par semaine, au moins !",
+  "On applaudit les beaux coups.",
+  "La meilleure revanche : rejouer.",
+  "Faites une pause, lancez un dé.",
+  "Tout le monde peut gagner une manche.",
+  "La soirée commence avec un « Jeu aléatoire »."
+];
+function dayOfYear(d){ const start=new Date(d.getFullYear(),0,0); const diff=d-start; const oneDay=1000*60*60*24; return Math.floor(diff/oneDay); }
+function renderEphemeride(){ const i=dayOfYear(new Date()); const t=ephemeridePhrases[i % ephemeridePhrases.length]; const el=document.getElementById('quote'); if(el) el.textContent=t; }
+
+    
+let lastResults = [];
+
 
     function durationBucket(mins){
       if(mins<10) return '<10';
@@ -205,36 +279,85 @@
         list.appendChild(node);
       });
       count.textContent = `${items.length} jeu(x)`;
+      const article = node.querySelector('article');
+article.dataset.slug = g.slug || g.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+// ... (le reste inchangé)
+lastResults = items;
+
     }
 
-    function filter(){
-      const query = q.value.trim().toLowerCase();
-      const psel = Array.from(document.querySelectorAll('input[name="players"]:checked')).map(i=>parseInt(i.value));
-      const dsel = Array.from(document.querySelectorAll('input[name="duration"]:checked')).map(i=>i.value);
-      const msel = Array.from(document.querySelectorAll('input[name="mat"]:checked')).map(i=>i.value);
+  function filter(){
+  const query = q.value.trim().toLowerCase();
+  const psel = Array.from(document.querySelectorAll('input[name="players"]:checked')).map(i=>parseInt(i.value));
+  const dsel = Array.from(document.querySelectorAll('input[name="duration"]:checked')).map(i=>i.value);
+  const msel = Array.from(document.querySelectorAll('input[name="mat"]:checked')).map(i=>i.value);
 
-      let items = data.filter(g=>{
-        const hay = [g.name, g.summary, g.tags.join(' '), g.equipment.join(' '), g.level].join(' ').toLowerCase();
-        const qok = !query || hay.includes(query);
-        const pok = psel.length===0 || psel.some(v=> g.players >= v);
-        const dok = dsel.length===0 || dsel.includes(durationBucket(g.duration));
-        const mats = getMaterialCats(g);
-        const mok = msel.length===0 || msel.some(m=> mats.includes(m));
-        return qok && pok && dok && mok;
-      });
-      render(items);
-      window.scrollTo({top:0,behavior:'smooth'});
-    });
-      render(items);
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
+  let items = data.filter(g=>{
+    const hay = [g.name, g.summary, g.tags.join(' '), g.equipment.join(' '), g.level].join(' ').toLowerCase();
+    const qok = !query || hay.includes(query);
+    const pok = psel.length===0 || psel.some(v=> g.players >= v);
+    const dok = dsel.length===0 || dsel.includes(durationBucket(g.duration));
+    const mats = getMaterialCats(g);
+    const mok = msel.length===0 || msel.some(m=> mats.includes(m));
+    return qok && pok && dok && mok;
+  });
 
-    q.addEventListener('input', filter);
-    playerChecks.forEach(el=>el.addEventListener('change', filter));
-    durationChecks.forEach(el=>el.addEventListener('change', filter));
-    matChecks.forEach(el=>el.addEventListener('change', filter));
+  render(items);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateSummary(id, values){
+  const el = document.getElementById(id);
+  el.textContent = values.length ? values.join(', ') : (id.includes('players')? 'Tous' : (id.includes('duration')? 'Toutes' : 'Tous'));
+}
+function updateAllSummaries(){
+  const p = Array.from(document.querySelectorAll('input[name="players"]:checked')).map(i=>i.value+'+');
+  const d = Array.from(document.querySelectorAll('input[name="duration"]:checked')).map(i=>i.value);
+  const m = Array.from(document.querySelectorAll('input[name="mat"]:checked')).map(i=>i.value);
+  updateSummary('playersSummary', p);
+  updateSummary('durationSummary', d);
+  updateSummary('materialSummary', m);
+}
 
-    render(data);
+q.addEventListener('input', ()=>{ filter(); });
+
+playerChecks.forEach(el=>el.addEventListener('change', ()=>{ updateAllSummaries(); filter(); }));
+durationChecks.forEach(el=>el.addEventListener('change', ()=>{ updateAllSummaries(); filter(); }));
+matChecks.forEach(el=>el.addEventListener('change', ()=>{ updateAllSummaries(); filter(); }));
+
+// fermer un dropdown si on clique ailleurs
+document.addEventListener('click', (e)=>{
+  document.querySelectorAll('details.multi[open]').forEach(d=>{
+    if(!d.contains(e.target)) d.removeAttribute('open');
+  });
+});
+
+// bouton Jeu aléatoire
+randomBtn.addEventListener('click', ()=>{
+  const pool = lastResults.length ? lastResults : data;
+  if(!pool.length) return;
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  const slug = (pick.slug || pick.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));
+  const el = document.querySelector(`[data-slug="${slug}"]`);
+  if(el){
+    el.classList.add('highlight');
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    setTimeout(()=>el.classList.remove('highlight'), 2000);
+  }
+});
+
+// clic sur la bière = retour page d’accueil + reset filtres
+homeLink.addEventListener('click', (e)=>{
+  e.preventDefault();
+  q.value='';
+  document.querySelectorAll('details.multi input[type="checkbox"]').forEach(c=>c.checked=false);
+  updateAllSummaries();
+  filter();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+    updateAllSummaries();
+    renderEphemeride();
+
   </script>
 </body>
 </html>
