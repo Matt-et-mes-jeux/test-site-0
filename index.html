@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bibliothèque de jeux de bar</title>
+  <meta name="description" content="Une bibliothèque gratuite et ouverte de jeux de bar : règles, matériel, durée, nombre de joueurs, variantes et conseils de mise en place." />
+  <style>
+    :root{
+      --bg:#0f1115;--card:#171a22;--muted:#9aa4b2;--text:#eef2f6;--accent:#7dd3fc;--accent2:#a78bfa;--ok:#86efac;--warn:#facc15;--danger:#fda4af;
+      --radius:18px;--shadow:0 10px 25px rgba(0,0,0,.35)
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:radial-gradient(1200px 800px at 10% -10%, rgba(125,211,252,.07), transparent),radial-gradient(1200px 700px at 110% -20%, rgba(167,139,250,.06), transparent),var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,"Helvetica Neue",Arial}
+    a{color:var(--accent)}
+    header{position:sticky;top:0;z-index:50;background:rgba(15,17,21,.7);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:38px;height:38px;border-radius:12px;background:conic-gradient(from 220deg, var(--accent), var(--accent2));display:grid;place-items:center;box-shadow:var(--shadow)}
+    .logo b{font-weight:800}
+    h1{font-size:22px;margin:0}
+    .tagline{color:var(--muted);font-size:14px;margin-top:2px}
+
+    .controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-top:14px}
+    .controls input,.controls select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#0b0d12;color:var(--text)}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    .card{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:10px}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--muted)}
+    .meta{display:flex;flex-wrap:wrap;gap:8px}
+    .title{font-size:18px;font-weight:700;margin:0 0 4px}
+    .desc{color:var(--muted);margin:0}
+    .steps{margin:10px 0 0 18px}
+    .steps li{margin:6px 0}
+    .badges{display:flex;gap:8px;flex-wrap:wrap}
+
+    .toolbar{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .btn{background:#0b0d12;border:1px solid rgba(255,255,255,.1);color:var(--text);padding:10px 12px;border-radius:12px;text-decoration:none}
+
+    footer{margin:40px 0 60px;color:var(--muted)}
+
+    .section{margin-top:36px;padding:18px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius)}
+
+    @media (max-width:1024px){.grid{grid-template-columns:1fr 1fr}.controls{grid-template-columns:1fr 1fr}}
+    @media (max-width:680px){.grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🎲</div>
+        <div>
+          <h1>Bibliothèque de jeux de bar</h1>
+          <div class="tagline">Trouvez le jeu parfait en fonction du nombre de joueurs, de la durée et de l'ambiance. Gratuit et open‑source.</div>
+        </div>
+      </div>
+      <div class="controls" aria-label="Filtres de recherche">
+        <input id="q" type="search" placeholder="Rechercher un jeu (ex: fléchettes, dés, calme, tournoi)" />
+        <select id="players">
+          <option value="">Nb joueurs</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+          <option value="6">6+</option>
+          <option value="8">8+</option>
+        </select>
+        <select id="duration">
+          <option value="">Durée</option>
+          <option value="<10">Moins de 10 min</option>
+          <option value="10-20">10–20 min</option>
+          <option value=">20">Plus de 20 min</option>
+        </select>
+        <select id="noise">
+          <option value="">Bruit</option>
+          <option value="faible">Faible</option>
+          <option value="moyen">Moyen</option>
+          <option value="fort">Fort</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="toolbar">
+      <div id="count">0 jeu(x)</div>
+      <a class="btn" href="#proposer">Proposer un jeu</a>
+    </div>
+
+    <section id="list" class="grid" aria-live="polite"></section>
+
+    <section class="section" id="apropos">
+      <h2>À propos</h2>
+      <p>Ce site est une bibliothèque collaborative de jeux de bar : classiques (fléchettes, billard, baby‑foot), jeux de cartes et de dés, jeux d'ambiance et mini‑défis. L'objectif est d'aider les gérants, les animateurs et les groupes d'amis à choisir rapidement un jeu adapté à leur contexte (espace, matériel, bruit, nombre de joueurs, durée).</p>
+      <ul>
+        <li><strong>Gratuit</strong> — Vous pouvez copier/adapter les règles pour vos besoins.</li>
+        <li><strong>Responsable</strong> — Les jeux « à boire » sont <em>optionnels</em> et toujours avec modération. Hydratation et alternatives sans alcool encouragées.</li>
+        <li><strong>Accessible</strong> — Filtres simples, fiches claires, variantes.</li>
+      </ul>
+    </section>
+
+    <section class="section" id="proposer">
+      <h2>Proposer un jeu</h2>
+      <p>Vous avez un jeu à ajouter ou une variante locale ? Envoyez le nom, la règle, le matériel, le nombre de joueurs et la durée par e‑mail :</p>
+      <p><a class="btn" href="mailto:contact@exemple.com?subject=Proposition%20de%20jeu%20de%20bar&body=Nom%20du%20jeu%3A%0ADur%C3%A9e%20indicative%3A%0ANombre%20de%20joueurs%3A%0AMat%C3%A9riel%3A%0ANiveau%3A%0ANiveau%20de%20bruit%3A%0AR%C3%A8gles%20%28%C3%A9tapes%29%3A%0AVariantes%3A%0AConseils%3A">✉️ Envoyer une proposition</a></p>
+      <p style="color:var(--muted)">Astuce : remplacez l'adresse dans le lien ci‑dessus par la vôtre avant de publier.</p>
+    </section>
+
+    <section class="section" id="mentions">
+      <h2>Mentions & sécurité</h2>
+      <ul>
+        <li>Respectez la législation locale (âge légal, interdictions de jeu d'argent, etc.).</li>
+        <li>L'abus d'alcool est dangereux pour la santé. Privilégiez l'eau entre les manches, des jeux sans alcool et des retours en sécurité.</li>
+        <li>Adaptez les règles pour que tout le monde puisse jouer (mobilité, sensibilité au bruit, accessibilité).</li>
+      </ul>
+    </section>
+
+    <footer>
+      Fait avec ❤️. Version 1.0 — Licence CC BY 4.0. Vous pouvez réutiliser en citant la source.
+    </footer>
+  </main>
+
+  <template id="card-tpl">
+    <article class="card">
+      <h3 class="title"></h3>
+      <p class="desc"></p>
+      <div class="meta"></div>
+      <details>
+        <summary>Règles détaillées</summary>
+        <ol class="steps"></ol>
+        <div class="badges"></div>
+      </details>
+    </article>
+  </template>
+
+  <script>
+    const data = [
+      {
+        name:"Fléchettes (301/501)",
+        slug:"flechettes",
+        summary:"Classique du pub. Visez le zéro en partant de 301 ou 501 points.",
+        players:2,
+        duration:20,
+        noise:"moyen",
+        equipment:["Cible","Fléchettes"],
+        level:"Débutant à confirmé",
+        alcohol:"aucun",
+        steps:[
+          "Chaque joueur commence à 301 (ou 501).",
+          "Trois lancers par tour. Soustrayez le score touché.",
+          "Finir exact. Variante 'double out' : terminer sur un double.",
+        ],
+        tips:["Marquer au tableau blanc.","Prévoir distance réglementaire ~2,37 m."],
+        tags:["adresse","classique","tournoi"]
+      },
+      {
+        name:"Billard (8‑pool)",
+        slug:"billard",
+        summary:"Entrer ses couleurs puis la noire en dernier. Accessible et visuel.",
+        players:2,
+        duration:25,
+        noise:"faible",
+        equipment:["Table de billard","Queues","Craie"],
+        level:"Tous niveaux",
+        alcohol:"aucun",
+        steps:[
+          "Casser le triangle.",
+          "La première couleur empochée détermine votre groupe (pleines/creuses).",
+          "Empocher toutes vos billes puis la noire pour gagner.",
+        ],
+        tips:["Essuyer la queue, jouer en séries simples pour les débutants."],
+        tags:["classique","adresse","calme"]
+      },
+      {
+        name:"Baby‑foot (match 5 points)",
+        slug:"babyfoot",
+        summary:"Rapide et compétitif. Matches courts à 5 points.",
+        players:2,
+        duration:10,
+        noise:"fort",
+        equipment:["Baby‑foot","Balles"],
+        level:"Tous niveaux",
+        alcohol:"aucun",
+        steps:[
+          "Service alterné.",
+          "Pas de 'gamelle' si la règle locale l'interdit.",
+          "Premier à 5 buts gagne (2 points d'écart optionnels).",
+        ],
+        tips:["Interdire les roulettes selon usage local.","Prévoir tournois en double."],
+        tags:["dynamique","tournoi"]
+      },
+      {
+        name:"421 (dés)",
+        slug:"421",
+        summary:"Jeu de dés français. Objectif : faire la meilleure combinaison (421 > brelan > suite...).",
+        players:2,
+        duration:8,
+        noise:"moyen",
+        equipment:["3 dés","Gobelet (optionnel)"],
+        level:"Débutant",
+        alcohol:"optionnel",
+        steps:[
+          "Chaque joueur a 3 lancers en conservant les dés voulus.",
+          "Ordre des mains : 4‑2‑1, brelans (6 à 1), suites, paires, total.",
+          "Le meilleur remporte la manche. Tournoi en 3 manches.",
+        ],
+        tips:["Utiliser sous‑bock comme piste.","Éviter de faire rouler sur le bar."],
+        tags:["dés","rapide"]
+      },
+      {
+        name:"Beer Pong (version soft)",
+        slug:"beerpong",
+        summary:"Lancer de balles dans des gobelets. Ici, proposer eau/jus à la place de l'alcool.",
+        players:4,
+        duration:20,
+        noise:"fort",
+        equipment:["Table","10 gobelets par équipe","Balle de ping‑pong"],
+        level:"Débutant",
+        alcohol:"optionnel",
+        steps:[
+          "Former deux triangles de gobelets (10).",
+          "Chaque équipe lance à tour de rôle. Un gobelet touché est retiré.",
+          "Équipe ayant retiré tous les gobelets adverses gagne.",
+        ],
+        tips:["Installer nappe et serviettes.","Prévoir mode 'hygiène' : rinçoirs eau claire."],
+        tags:["adresse","animation"]
+      },
+      {
+        name:"Flip Cup (eau)",
+        slug:"flipcup",
+        summary:"Relais d'équipe : boire (ou eau), puis retourner le gobelet d'un flip du bord.",
+        players:6,
+        duration:10,
+        noise:"fort",
+        equipment:["Table","Gobelets"],
+        level:"Débutant",
+        alcohol:"optionnel",
+        steps:[
+          "Deux équipes alignées. Premier boit une petite gorgée (eau ok).",
+          "Retourne son gobelet en un flip. Puis c'est au suivant.",
+          "Première équipe à finir gagne.",
+        ],
+        tips:["Tracer des lignes de départ.","Proposer version sans boisson."],
+        tags:["relais","animation"]
+      },
+      {
+        name:"Caps (bouchons)",
+        slug:"caps",
+        summary:"Lancer de capsules dans un verre. Compact et facile.",
+        players:2,
+        duration:12,
+        noise:"moyen",
+        equipment:["Capsules","Verre"],
+        level:"Débutant",
+        alcohol:"aucun",
+        steps:[
+          "Placer un verre entre joueurs.",
+          "À tour de rôle, flick d'une capsule pour la faire tomber dans le verre.",
+          "Compter les points sur 10 lancers chacun.",
+        ],
+        tips:["Protéger la table.","Adapter la distance."],
+        tags:["adresse","rapide"]
+      },
+      {
+        name:"Quiz de bar (express)",
+        slug:"quiz",
+        summary:"10 questions rapides préparées par l'animateur/serveur.",
+        players:4,
+        duration:15,
+        noise:"moyen",
+        equipment:["Feuilles","Stylos","Téléphone pour chronométrer"],
+        level:"Tous niveaux",
+        alcohol:"aucun",
+        steps:[
+          "Former des équipes de 2‑5 joueurs.",
+          "Poser 10 questions (culture pop, locale, musique).",
+          "Corriger en direct, petite récompense symbolique.",
+        ],
+        tips:["Utiliser playlists du bar pour les blind‑tests.","Limiter à 30 secondes par question."],
+        tags:["quiz","ambiance","animation"]
+      },
+      {
+        name:"Pierre‑papier‑ciseaux (tournoi)",
+        slug:"ppc",
+        summary:"Mini‑tournoi élimination directe. Zéro matériel.",
+        players:6,
+        duration:8,
+        noise:"moyen",
+        equipment:[],
+        level:"Débutant",
+        alcohol:"aucun",
+        steps:[
+          "Inscrire tous les joueurs.",
+          "1,2,3… tirage. BO3 par match.",
+          "Finale et photo souvenir.",
+        ],
+        tips:["Idéal pour briser la glace."],
+        tags:["rapide","tournoi","sans matériel"]
+      },
+      {
+        name:"Kems (cartes)",
+        slug:"kems",
+        summary:"Jeu par équipes avec signal secret. Fou rire garanti.",
+        players:4,
+        duration:15,
+        noise:"fort",
+        equipment:["Jeu de 52 cartes"],
+        level:"Débutant",
+        alcohol:"aucun",
+        steps:[
+          "Former 2 équipes de 2 et choisir un signal discret.",
+          "Distribuer 4 cartes chacun, centre 4 cartes ouvertes; échanges rapides.",
+          "Annoncer 'Kems' quand votre partenaire a 4 cartes identiques.",
+        ],
+        tips:["Limiter les signaux trop évidents.","Prévoir plusieurs manches."],
+        tags:["cartes","ambiance"]
+      },
+      {
+        name:"Time’s Up! (version maison)",
+        slug:"timesup",
+        summary:"Faites deviner des mots (parole, 1 mot, mime) en 3 manches.",
+        players:4,
+        duration:25,
+        noise:"fort",
+        equipment:["Papiers","Stylos","Bol"],
+        level:"Tous niveaux",
+        alcohol:"aucun",
+        steps:[
+          "Chaque joueur écrit 5 noms/mots et les met dans le bol.",
+          "Manche 1 : description libre. Manche 2 : un seul mot. Manche 3 : mime.",
+          "Addition des points par équipe.",
+        ],
+        tips:["Préparer 30‑40 mots pour 6‑8 joueurs."],
+        tags:["ambiance","mime"]
+      },
+      {
+        name:"Morpion géant (sous‑bocks)",
+        slug:"morpion",
+        summary:"Grille 3×3 avec sous‑bocks de deux marques. Simple et visuel.",
+        players:2,
+        duration:5,
+        noise:"faible",
+        equipment:["9 sous‑bocks"],
+        level:"Débutant",
+        alcohol:"aucun",
+        steps:[
+          "Former une grille 3×3 avec des sous‑bocks.",
+          "Chaque joueur pose à tour de rôle son marqueur.",
+          "Aligner 3 pour gagner. BO3 recommandé.",
+        ],
+        tips:["Utiliser deux couleurs/marques distinctes."],
+        tags:["rapide","calme","sans matériel"]
+      },
+      {
+        name:"Jungle Speed (cartes + totem)",
+        slug:"junglespeed",
+        summary:"Réflexe et observation. Attrapez le totem au bon motif.",
+        players:4,
+        duration:20,
+        noise:"fort",
+        equipment:["Jeu Jungle Speed"],
+        level:"Débutant",
+        alcohol:"aucun",
+        steps:[
+          "Distribuer le paquet entre joueurs.",
+          "Chacun retourne une carte; duel si motifs correspondants.",
+          "Le vainqueur se défausse. Le premier sans cartes gagne.",
+        ],
+        tips:["Prévoir espace dégagé pour éviter heurts."],
+        tags:["réflexe","ambiance"]
+      }
+    ];
+
+    const list = document.getElementById('list');
+    const tpl = document.getElementById('card-tpl');
+    const q = document.getElementById('q');
+    const players = document.getElementById('players');
+    const duration = document.getElementById('duration');
+    const noise = document.getElementById('noise');
+    const count = document.getElementById('count');
+
+    function durationBucket(mins){
+      if(mins<10) return '<10';
+      if(mins<=20) return '10-20';
+      return '>20';
+    }
+
+    function render(items){
+      list.innerHTML='';
+      items.forEach(g=>{
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('.title').textContent = g.name;
+        node.querySelector('.desc').textContent = g.summary;
+        const meta = node.querySelector('.meta');
+        const pills = [
+          `${g.players}+ joueurs`,
+          `${g.duration} min`,
+          `Bruit : ${g.noise}`,
+          `Niveau : ${g.level}`,
+        ];
+        pills.forEach(p=>{
+          const span = document.createElement('span');
+          span.className='pill';
+          span.textContent=p; meta.appendChild(span);
+        });
+        const steps = node.querySelector('.steps');
+        g.steps.forEach(s=>{const li=document.createElement('li');li.textContent=s;steps.appendChild(li)});
+        const badges = node.querySelector('.badges');
+        const equip = document.createElement('span');
+        equip.className='pill'; equip.textContent = `Matériel : ${g.equipment.join(', ')||'—'}`; badges.appendChild(equip);
+        const alcohol = document.createElement('span'); alcohol.className='pill'; alcohol.textContent = `Alcool : ${g.alcohol}`; badges.appendChild(alcohol);
+        const tags = document.createElement('span'); tags.className='pill'; tags.textContent = `Tags : ${g.tags.join(', ')}`; badges.appendChild(tags);
+        list.appendChild(node);
+      });
+      count.textContent = `${items.length} jeu(x)`;
+    }
+
+    function filter(){
+      const query = q.value.trim().toLowerCase();
+      let items = data.filter(g=>{
+        const hay = [g.name, g.summary, g.tags.join(' '), g.equipment.join(' '), g.level, g.noise].join(' ').toLowerCase();
+        const qok = !query || hay.includes(query);
+        const pok = !players.value || g.players >= parseInt(players.value);
+        const dok = !duration.value || durationBucket(g.duration) === duration.value;
+        const nok = !noise.value || g.noise === noise.value;
+        return qok && pok && dok && nok;
+      });
+      render(items);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    [q,players, duration, noise].forEach(el=>el.addEventListener('input', filter));
+
+    render(data);
+  </script>
+</body>
+</html>
