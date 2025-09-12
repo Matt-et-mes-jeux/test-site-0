@@ -24,7 +24,12 @@
     .tagline{color:var(--muted);font-size:15px;margin-top:4px;font-style:italic}
 
     .controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-top:14px}
-    .controls input,.controls select{width:100%;padding:12px 14px;border-radius:8px;border:1px solid #d0c4b0;background:#fdf9f4;color:var(--text)}
+    .controls input,.controls select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e7dccd;background:#fff;color:var(--text);box-shadow:inset 0 1px 0 rgba(0,0,0,.03)}
+    .checks{width:100%;padding:10px 12px;border:1px solid #e7dccd;background:#fff;border-radius:12px}
+    .checks legend{font-weight:800;font-size:12px;letter-spacing:.02em;color:#7a5a40;margin-bottom:6px}
+    .checks .opts{display:flex;flex-wrap:wrap;gap:8px}
+    .checks label{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid #eadfce;background:#fffaf3;font-size:13px;color:#7a5a40}
+    .checks input[type=checkbox]{accent-color: var(--accent);}
 
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
     .card{background:var(--card);border:1px solid #e2d9c9;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:10px}
@@ -59,27 +64,40 @@
         </div>
       </div>
       <div class="controls" aria-label="Filtres de recherche">
-        <input id="q" type="search" placeholder="Rechercher un jeu (ex: cartes, dés, adresse, tournoi)" />
-        <select id="players">
-          <option value="">Nb joueurs</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-          <option value="6">6+</option>
-          <option value="8">8+</option>
-        </select>
-        <select id="duration">
-          <option value="">Durée</option>
-          <option value="<10">Moins de 10 min</option>
-          <option value="10-20">10–20 min</option>
-          <option value=">20">Plus de 20 min</option>
-        </select>
-        <select id="noise">
-          <option value="">Bruit</option>
-          <option value="faible">Faible</option>
-          <option value="moyen">Moyen</option>
-          <option value="fort">Fort</option>
-        </select>
+        <input id="q" type="search" placeholder="Chercher un jeu (ex: fléchettes, dés, sans matériel)" />
+        <fieldset class="checks" id="playersBox">
+          <legend>Joueurs</legend>
+          <div class="opts">
+            <label><input type="checkbox" name="players" value="2">2+</label>
+            <label><input type="checkbox" name="players" value="3">3+</label>
+            <label><input type="checkbox" name="players" value="4">4+</label>
+            <label><input type="checkbox" name="players" value="6">6+</label>
+            <label><input type="checkbox" name="players" value="8">8+</label>
+          </div>
+        </fieldset>
+        <fieldset class="checks" id="durationBox">
+          <legend>Durée</legend>
+          <div class="opts">
+            <label><input type="checkbox" name="duration" value="<10">&lt;10 min</label>
+            <label><input type="checkbox" name="duration" value="10-20">10–20 min</label>
+            <label><input type="checkbox" name="duration" value=">20">&gt;20 min</label>
+          </div>
+        </fieldset>
+        <fieldset class="checks" id="materialBox">
+          <legend>Matériel</legend>
+          <div class="opts">
+            <label><input type="checkbox" name="mat" value="rien">Rien</label>
+            <label><input type="checkbox" name="mat" value="cartes">Cartes</label>
+            <label><input type="checkbox" name="mat" value="dés">Dés</label>
+            <label><input type="checkbox" name="mat" value="fléchettes">Fléchettes</label>
+            <label><input type="checkbox" name="mat" value="billard">Billard</label>
+            <label><input type="checkbox" name="mat" value="baby-foot">Baby-foot</label>
+            <label><input type="checkbox" name="mat" value="gobelets">Gobelets</label>
+            <label><input type="checkbox" name="mat" value="capsules">Capsules</label>
+            <label><input type="checkbox" name="mat" value="totem">Totem</label>
+            <label><input type="checkbox" name="mat" value="sous-bocks">Sous-bocks</label>
+          </div>
+        </fieldset>
       </div>
     </div>
   </header>
@@ -132,15 +150,31 @@
     const list = document.getElementById('list');
     const tpl = document.getElementById('card-tpl');
     const q = document.getElementById('q');
-    const players = document.getElementById('players');
-    const duration = document.getElementById('duration');
-    const noise = document.getElementById('noise');
+    const playerChecks = document.querySelectorAll('input[name="players"]');
+    const durationChecks = document.querySelectorAll('input[name="duration"]');
+    const matChecks = document.querySelectorAll('input[name="mat"]');
     const count = document.getElementById('count');
 
     function durationBucket(mins){
       if(mins<10) return '<10';
       if(mins<=20) return '10-20';
       return '>20';
+    }
+
+    function getMaterialCats(g){
+      const text = (g.equipment.join(' ') + ' ' + g.name + ' ' + (g.tags||[]).join(' ')).toLowerCase();
+      const cats = new Set();
+      if(g.equipment.length===0 || text.includes('sans matériel') || text.includes('sans materiel') || (g.tags||[]).includes('sans matériel')) cats.add('rien');
+      if(text.includes('carte')) cats.add('cartes');
+      if(text.includes('dés') || text.includes('des') ) cats.add('dés');
+      if(text.includes('cible') || text.includes('fléchette') || text.includes('flechette')) cats.add('fléchettes');
+      if(text.includes('billard')) cats.add('billard');
+      if(text.includes('baby‑foot') || text.includes('baby-foot') || text.includes('babyfoot')) cats.add('baby-foot');
+      if(text.includes('gobelet')) cats.add('gobelets');
+      if(text.includes('capsule')) cats.add('capsules');
+      if(text.includes('totem')) cats.add('totem');
+      if(text.includes('sous‑bock') || text.includes('sous-bock')) cats.add('sous-bocks');
+      return Array.from(cats);
     }
 
     function render(items){
@@ -175,19 +209,30 @@
 
     function filter(){
       const query = q.value.trim().toLowerCase();
+      const psel = Array.from(document.querySelectorAll('input[name="players"]:checked')).map(i=>parseInt(i.value));
+      const dsel = Array.from(document.querySelectorAll('input[name="duration"]:checked')).map(i=>i.value);
+      const msel = Array.from(document.querySelectorAll('input[name="mat"]:checked')).map(i=>i.value);
+
       let items = data.filter(g=>{
-        const hay = [g.name, g.summary, g.tags.join(' '), g.equipment.join(' '), g.level, g.noise].join(' ').toLowerCase();
+        const hay = [g.name, g.summary, g.tags.join(' '), g.equipment.join(' '), g.level].join(' ').toLowerCase();
         const qok = !query || hay.includes(query);
-        const pok = !players.value || g.players >= parseInt(players.value);
-        const dok = !duration.value || durationBucket(g.duration) === duration.value;
-        const nok = !noise.value || g.noise === noise.value;
-        return qok && pok && dok && nok;
+        const pok = psel.length===0 || psel.some(v=> g.players >= v);
+        const dok = dsel.length===0 || dsel.includes(durationBucket(g.duration));
+        const mats = getMaterialCats(g);
+        const mok = msel.length===0 || msel.some(m=> mats.includes(m));
+        return qok && pok && dok && mok;
       });
+      render(items);
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
       render(items);
       window.scrollTo({top:0,behavior:'smooth'});
     }
 
-    [q,players, duration, noise].forEach(el=>el.addEventListener('input', filter));
+    q.addEventListener('input', filter);
+    playerChecks.forEach(el=>el.addEventListener('change', filter));
+    durationChecks.forEach(el=>el.addEventListener('change', filter));
+    matChecks.forEach(el=>el.addEventListener('change', filter));
 
     render(data);
   </script>
