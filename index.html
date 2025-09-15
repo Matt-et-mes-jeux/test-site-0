@@ -24,29 +24,21 @@
     .tagline{color:var(--muted);font-size:15px;margin-top:4px;font-style:italic}
 
     .controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-top:14px}
-    .controls input{
-  width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e7dccd;
-  background:#fff;color:var(--text);box-shadow:inset 0 1px 0 rgba(0,0,0,.03)
-}
-.multi{position:relative;background:#fff;border:1px solid #e7dccd;border-radius:12px;padding:0}
-.multi summary{list-style:none;padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.multi summary::-webkit-details-marker{display:none}
-.multi[open]{box-shadow:var(--shadow)}
-.multi .panel{position:absolute;z-index:30;background:#fff;border:1px solid #eadfce;border-radius:12px;padding:10px;top:calc(100% + 6px);left:0;right:0;display:grid;gap:8px}
-.multi label{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px}
-.multi input[type=checkbox]{accent-color: var(--accent)}
-.multi summary em{color:#7a5a40;font-style:normal;font-weight:700;font-size:12px}
-.multi summary span{font-weight:800;font-size:12px;letter-spacing:.02em;color:#7a5a40}
+    .controls input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e7dccd;background:#fff;color:var(--text);box-shadow:inset 0 1px 0 rgba(0,0,0,.03)}
+    /* menus déroulants multi-choix */
+    .multi{position:relative;background:#fff;border:1px solid #e7dccd;border-radius:12px;padding:0}
+    .multi summary{list-style:none;padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+    .multi summary::-webkit-details-marker{display:none}
+    .multi[open]{box-shadow:var(--shadow)}
+    .multi .panel{position:absolute;z-index:30;background:#fff;border:1px solid #eadfce;border-radius:12px;padding:10px;top:calc(100% + 6px);left:0;right:0;display:grid;gap:8px}
+    .multi label{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px}
+    .multi input[type=checkbox]{accent-color: var(--accent)}
+    .multi summary em{color:#7a5a40;font-style:normal;font-weight:700;font-size:12px}
+    .multi summary span{font-weight:800;font-size:12px;letter-spacing:.02em;color:#7a5a40}
 
-/* Surbrillance pour le jeu aléatoire */
-.highlight{outline:2px solid var(--accent2);animation:flash 1s ease-in-out 0s 2 alternate;border-radius:var(--radius)}
-@keyframes flash{from{background:#fff4df} to{background:#ffffff}}
-
-    .checks{width:100%;padding:10px 12px;border:1px solid #e7dccd;background:#fff;border-radius:12px}
-    .checks legend{font-weight:800;font-size:12px;letter-spacing:.02em;color:#7a5a40;margin-bottom:6px}
-    .checks .opts{display:flex;flex-wrap:wrap;gap:8px}
-    .checks label{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid #eadfce;background:#fffaf3;font-size:13px;color:#7a5a40}
-    .checks input[type=checkbox]{accent-color: var(--accent);}
+    /* Surbrillance pour le jeu aléatoire */
+    .highlight{outline:2px solid var(--accent2);animation:flash 1s ease-in-out 0s 2 alternate;border-radius:var(--radius)}
+    @keyframes flash{from{background:#fff4df} to{background:#ffffff}}
 
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
     .card{background:var(--card);border:1px solid #e2d9c9;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:10px}
@@ -74,69 +66,67 @@
   <header>
     <div class="wrap">
       <div class="brand">
-      <a href="#" id="homeLink" class="logo" aria-label="Accueil — réinitialiser les filtres">🍻</a>
+        <a href="#" id="homeLink" class="logo" aria-label="Accueil — réinitialiser les filtres">🍻</a>
         <div>
           <h1>Bibliothèque de jeux de bar</h1>
           <div class="tagline">Une ambiance conviviale, des règles simples et du plaisir partagé.</div>
         </div>
       </div>
       <div class="controls" aria-label="Filtres de recherche">
-  <input id="q" type="search" placeholder="Chercher un jeu (ex: fléchettes, dés, sans matériel)" />
+        <input id="q" type="search" placeholder="Chercher un jeu (ex: fléchettes, dés, sans matériel)" />
 
-  <details class="multi" id="playersDDL">
-    <summary><span>Joueurs</span><em id="playersSummary">Tous</em></summary>
-    <div class="panel">
-      <label><input type="checkbox" name="players" value="2">2+</label>
-      <label><input type="checkbox" name="players" value="3">3+</label>
-      <label><input type="checkbox" name="players" value="4">4+</label>
-      <label><input type="checkbox" name="players" value="6">6+</label>
-      <label><input type="checkbox" name="players" value="8">8+</label>
+        <details class="multi" id="playersDDL">
+          <summary><span>Joueurs</span><em id="playersSummary">Tous</em></summary>
+          <div class="panel">
+            <label><input type="checkbox" name="players" value="2">2+</label>
+            <label><input type="checkbox" name="players" value="3">3+</label>
+            <label><input type="checkbox" name="players" value="4">4+</label>
+            <label><input type="checkbox" name="players" value="6">6+</label>
+            <label><input type="checkbox" name="players" value="8">8+</label>
+          </div>
+        </details>
+
+        <details class="multi" id="durationDDL">
+          <summary><span>Durée</span><em id="durationSummary">Toutes</em></summary>
+          <div class="panel">
+            <label><input type="checkbox" name="duration" value="<10">&lt;10 min</label>
+            <label><input type="checkbox" name="duration" value="10-20">10–20 min</label>
+            <label><input type="checkbox" name="duration" value=">20">&gt;20 min</label>
+          </div>
+        </details>
+
+        <details class="multi" id="materialDDL">
+          <summary><span>Matériel</span><em id="materialSummary">Tous</em></summary>
+          <div class="panel">
+            <label><input type="checkbox" name="mat" value="rien">Rien</label>
+            <label><input type="checkbox" name="mat" value="cartes">Cartes</label>
+            <label><input type="checkbox" name="mat" value="dés">Dés</label>
+            <label><input type="checkbox" name="mat" value="fléchettes">Fléchettes</label>
+            <label><input type="checkbox" name="mat" value="billard">Billard</label>
+            <label><input type="checkbox" name="mat" value="baby-foot">Baby-foot</label>
+            <label><input type="checkbox" name="mat" value="gobelets">Gobelets</label>
+            <label><input type="checkbox" name="mat" value="capsules">Capsules</label>
+            <label><input type="checkbox" name="mat" value="totem">Totem</label>
+            <label><input type="checkbox" name="mat" value="sous-bocks">Sous-bocks</label>
+          </div>
+        </details>
+      </div>
     </div>
-  </details>
-
-  <details class="multi" id="durationDDL">
-    <summary><span>Durée</span><em id="durationSummary">Toutes</em></summary>
-    <div class="panel">
-      <label><input type="checkbox" name="duration" value="<10">&lt;10 min</label>
-      <label><input type="checkbox" name="duration" value="10-20">10–20 min</label>
-      <label><input type="checkbox" name="duration" value=">20">&gt;20 min</label>
-    </div>
-  </details>
-
-  <details class="multi" id="materialDDL">
-    <summary><span>Matériel</span><em id="materialSummary">Tous</em></summary>
-    <div class="panel">
-      <label><input type="checkbox" name="mat" value="rien">Rien</label>
-      <label><input type="checkbox" name="mat" value="cartes">Cartes</label>
-      <label><input type="checkbox" name="mat" value="dés">Dés</label>
-      <label><input type="checkbox" name="mat" value="fléchettes">Fléchettes</label>
-      <label><input type="checkbox" name="mat" value="billard">Billard</label>
-      <label><input type="checkbox" name="mat" value="baby-foot">Baby-foot</label>
-      <label><input type="checkbox" name="mat" value="gobelets">Gobelets</label>
-      <label><input type="checkbox" name="mat" value="capsules">Capsules</label>
-      <label><input type="checkbox" name="mat" value="totem">Totem</label>
-      <label><input type="checkbox" name="mat" value="sous-bocks">Sous-bocks</label>
-    </div>
-  </details>
-</div>
-</div>
-</header>
-
+  </header>
 
   <main class="wrap">
     <section class="section" id="ephemeride">
-  <h2>Éphéméride</h2>
-  <p id="quote" class="desc">…</p>
-</section>
+      <h2>Éphéméride</h2>
+      <p id="quote" class="desc">…</p>
+    </section>
 
-<div class="toolbar" style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-  <div id="count">0 jeu(x)</div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn" id="randomBtn" type="button">Jeu aléatoire</button>
-    <a class="btn" href="#proposer">Proposer un jeu</a>
-  </div>
-</div>
-
+    <div class="toolbar" style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div id="count">0 jeu(x)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" id="randomBtn" type="button">Jeu aléatoire</button>
+        <a class="btn" href="#proposer">Proposer un jeu</a>
+      </div>
+    </div>
 
     <section id="list" class="grid" aria-live="polite"></section>
 
@@ -175,562 +165,44 @@
   </template>
 
   <script>
-    // Même script de filtrage et affichage que la V1
-    
-// ===== Données — Jeux de bar (pack v1) =====
-const data = [
-  {
-    name: "21",
-    slug: "21",
-    summary: "On compte jusqu’à 21… celui qui dit 21 boit et invente une règle. Chill, mais piégeux.",
-    players: 2,
-    duration: 30,
-    noise: "moyen",
-    equipment: [],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Le 1er joueur dit 1 à 3 nombres à la suite.",
-      "Le suivant reprend et dit 1 à 3 nombres MAIS pas le même compte que son prédécesseur.",
-      "Celui qui tombe sur 21 boit et crée une nouvelle règle."
-    ],
-    tips: [
-      "Mets le tempo pour pousser à l’erreur.",
-      "Ne rappelle pas trop les règles… c’est plus drôle quand ça déraille."
-    ],
-    tags: ["ambiance","sans matériel","classique"]
-  },
-  {
-    name: "21 Dés",
-    slug: "21-des",
-    summary: "Lance le dé et additionne : dépasser 21, c’est boire. Clair, net, précis.",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: ["1 dé"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Chacun lance le dé à son tour et ajoute au total.",
-      "Si tu dépasses 21, tu bois et on repart."
-    ],
-    tips: ["Se joue très bien en ‘fond de soirée’ en parallèle d’un autre jeu."],
-    tags: ["dés","rapide"]
-  },
-  {
-    name: "421",
-    slug: "421",
-    summary: "3 dés, 3 lancers. 421 > brelan > suite > paire… Que le meilleur bluffeur gagne.",
-    players: 2,
-    duration: 30,
-    noise: "moyen",
-    equipment: ["3 dés","gobelet (optionnel)"],
-    level: "Tous niveaux",
-    alcohol: "optionnel",
-    steps: [
-      "Chaque joueur lance jusqu’à 3 fois (en gardant les dés choisis).",
-      "Comparez les combinaisons : 421 au sommet, puis brelans, suites…",
-      "Le perdant boit, le gagnant distribue."
-    ],
-    tips: ["Un sous-bock fait une bonne piste à dés.", "Idéal en 1v1 tranquille."],
-    tags: ["dés","classique"]
-  },
-  {
-    name: "7 - 14 - 21",
-    slug: "7-14-21",
-    summary: "On chasse les ‘1’ avec 3 dés. À 7 et 14, on fixe l’alcool et les gorgées. À 21… aïe.",
-    players: 2,
-    duration: 30,
-    noise: "moyen",
-    equipment: ["3 dés"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Lance 3 dés. Au moins un ‘1’ ? Ajoute ce nombre au total et rejoue ; sinon, passe.",
-      "À 7 : on choisit la boisson ; à 14 : le nombre de gorgées.",
-      "Le joueur qui atteint 21 boit ce qui a été fixé."
-    ],
-    tips: ["Si le 0→7/7→14/14→21 se fait d’un coup, tous les autres boivent."],
-    tags: ["dés","ambiance"]
-  },
-  {
-    name: "9 ou Valet",
-    slug: "9-ou-valet",
-    summary: "Tu devines la carte. Tu rates ? Tu bois. Tu réussis ? Il boit. Simple, efficace.",
-    players: 2,
-    duration: 10,
-    noise: "moyen",
-    equipment: ["52 cartes"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Le donneur demande : “9 ou Valet ?” (ou une autre hauteur).",
-      "Le devineur annonce. On retourne : gagnant boit/donne à boire."
-    ],
-    tips: ["Ne préviens pas des règles au devineur… c’est meilleur à cru."],
-    tags: ["cartes","rapide"]
-  },
-  {
-    name: "Autoroute",
-    slug: "autoroute",
-    summary: "Traverser 7 cartes en devinant plus/moins/égal. Le bitume est glissant.",
-    players: 2,
-    duration: 10,
-    noise: "moyen",
-    equipment: ["52 cartes"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Pose 7 cartes face cachée.",
-      "Devine si la suivante est plus, moins ou égale ; erreur = tu bois et tu recommences.",
-      "À la 4e carte, tu gagnes 2 ‘chances’ bonus."
-    ],
-    tips: ["Varie la longueur de l’autoroute selon le niveau."],
-    tags: ["cartes","adresse"]
-  },
-  {
-    name: "Beer Pong (version soft)",
-    slug: "beer-pong",
-    summary: "Balles + gobelets en triangle. Mets dedans, retire le verre. Oui, c’est mythique.",
-    players: 4,
-    duration: 30,
-    noise: "fort",
-    equipment: ["2 balles de ping-pong","20 gobelets","table"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Deux pyramides de 10 gobelets, bras sans dépasser la table pour lancer.",
-      "Touché = on retire le gobelet ; un rebond est autorisé.",
-      "Réorganisation des gobelets possible 1 fois / partie."
-    ],
-    tips: ["Mets de l’eau dans les gobelets et bois dans ton verre : hygiène ++."],
-    tags: ["adresse","tournoi","gobelets"]
-  },
-  {
-    name: "Belote de comptoir",
-    slug: "belote-de-comptoir",
-    summary: "Belote express avec enchères, atout et shot au milieu. Pour les poivrots stratèges.",
-    players: 2,
-    duration: 30,
-    noise: "moyen",
-    equipment: ["32 cartes","1 shot (au centre)"],
-    level: "Confirmé",
-    alcohol: "optionnel",
-    steps: [
-      "Chaque joueur reçoit 1–5 cartes (même nombre chacun).",
-      "Enchères sur le nombre de points, choix de l’atout, puis plis.",
-      "Si le contrat est tenu : donner le shot ; sinon : le boire."
-    ],
-    tips: ["Clarifiez les variantes avant (belote/rebelote, carte visible, etc.)."],
-    tags: ["cartes","stratégie"]
-  },
-  {
-    name: "Black Jack (maison)",
-    slug: "black-jack",
-    summary: "Approche 21 sans exploser. La banque boit pour tous ses péchés.",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: ["52 cartes"],
-    level: "Tous niveaux",
-    alcohol: "optionnel",
-    steps: [
-      "Chaque joueur parie des gorgées. 2 cartes aux joueurs, 1 à la banque.",
-      "Hit/Stand/Doubler/Split selon ta main ; au-delà de 21 : perdu.",
-      "La banque tire jusqu’à ≥17, puis compare les scores et boit/ fait boire."
-    ],
-    tips: ["Le BlackJack (As+10) bat un simple 21."],
-    tags: ["cartes","classique"]
-  },
-  {
-    name: "Caps",
-    slug: "caps",
-    summary: "Fais tomber la capsule de l’autre. Si ça tombe dans la bouteille : cul-sec !",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: ["2 capsules","bouteilles"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Capsules posées sur les bouteilles ; on lance sa capsule pour faire tomber celle des autres.",
-      "Capsule tombée = l’autre boit ; tombée dans la bouteille = cul-sec."
-    ],
-    tips: ["Prévois une zone de tir dédiée (évite la casse)."],
-    tags: ["adresse","capsules"]
-  },
-  {
-    name: "Chifoumi",
-    slug: "chifoumi",
-    summary: "Pierre-Feuille-Ciseaux pour régler tout et rien. Shot/gorgée en mise légère.",
-    players: 2,
-    duration: 10,
-    noise: "faible",
-    equipment: [],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Pierre bat Ciseaux, Ciseaux bat Feuille, Feuille bat Pierre.",
-      "Joue en manche courte pour départager fissa."
-    ],
-    tips: ["Parfait pour arbitrer un débat d’experts."],
-    tags: ["sans matériel","rapide"]
-  },
-  {
-    name: "Chifoumi chinois",
-    slug: "chifoumi-chinois",
-    summary: "Chifoumi… mais en cartes (3×6 cartes). Le shot attend le perdant.",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: ["18 cartes (3 signes × 6)","1 shot"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Choisir 3 signes (ex : ♠=Pierre, ♣=Feuille, ♦=Ciseaux).",
-      "Chacun révèle une carte en même temps ; perdant boit le shot.",
-      "Jusqu’à épuisement des 3 cartes de chacun."
-    ],
-    tips: ["Varie le nombre de cartes pour des manches plus longues."],
-    tags: ["cartes","duel"]
-  },
-  {
-    name: "Chochoï (cercles de cartes)",
-    slug: "chochoi",
-    summary: "Le cercle ne doit pas se briser. Et la pile au sommet doit tenir !",
-    players: 2,
-    duration: 45,
-    noise: "moyen",
-    equipment: ["52 cartes","bouteille (support)","1 shot"],
-    level: "Intermédiaire",
-    alcohol: "optionnel",
-    steps: [
-      "Dispose un cercle de cartes autour d’une bouteille, pioche sans casser le cercle.",
-      "Applique l’action liée à la carte (règles spécial ‘palmier’).",
-      "Finir son tour en posant sa carte sur la bouteille (deux coins dépassent)."
-    ],
-    tips: ["Si le cercle casse ou la pile tombe : shot !"],
-    tags: ["cartes","ambiance","long"]
-  },
-  {
-    name: "Dixit (2 dés)",
-    slug: "dixit-des",
-    summary: "Lance 2 dés : 3 = crée/supprime règle, 7 = ‘Dixit’… et ainsi de suite.",
-    players: 2,
-    duration: 45,
-    noise: "moyen",
-    equipment: ["2 dés"],
-    level: "Tous niveaux",
-    alcohol: "optionnel",
-    steps: [
-      "Lance 2 dés et applique l’effet (3=nouvelle règle, 7=Dixit, 9=précédent boit, 10=toi, 11=suivant…).",
-      "Double = distribue ce nombre de gorgées.",
-      "Le ‘prisonnier’ boit quand un 3 sort (jusqu’à se libérer en faisant 3)."
-    ],
-    tips: ["Note les règles inventées… ou pas, c’est le bazar voulu."],
-    tags: ["dés","ambiance","règles évolutives"]
-  },
-  {
-    name: "French Banger",
-    slug: "french-banger",
-    summary: "Flip de gobelet en duel : rapproche le shot de l’adversaire, ou bois.",
-    players: 2,
-    duration: 10,
-    noise: "fort",
-    equipment: ["1 shot","2 gobelets"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Deux joueurs face à face, shot au milieu ; 3 allumettes comme ‘paliers’.",
-      "Chaque flip réussi déplace le shot vers l’adversaire.",
-      "Quand le shot arrive chez toi : tu bois."
-    ],
-    tips: ["En carton (les gobelets), la planète te dit merci."],
-    tags: ["gobelets","duel","rapide"]
-  },
-  {
-    name: "Fuck the dealer",
-    slug: "fuck-the-dealer",
-    summary: "Devine la carte du dessus ; le dealer trinque (ou te fait trinquer).",
-    players: 3,
-    duration: 45,
-    noise: "moyen",
-    equipment: ["52 cartes"],
-    level: "Intermédiaire",
-    alcohol: "optionnel",
-    steps: [
-      "Le dealer fait deviner la carte du dessus.",
-      "1ère tentative : juste = dealer boit 5 ; faux = ‘plus/moins’.",
-      "2e tentative : juste = dealer boit 3 ; faux = tu bois l’écart."
-    ],
-    tips: ["Au 3e échec d’affilée, le rôle de dealer peut tourner."],
-    tags: ["cartes","bluff"]
-  },
-  {
-    name: "Grelote ça Picote",
-    slug: "grelote-ca-picote",
-    summary: "Défausse rapide en criant des noms. Si tu traînes, tu trinques.",
-    players: 2,
-    duration: 30,
-    noise: "fort",
-    equipment: ["52 cartes"],
-    level: "Intermédiaire",
-    alcohol: "optionnel",
-    steps: [
-      "3 cartes en main ; on pose sur la dernière carte jouée (même signe ou même hauteur) en appelant un joueur.",
-      "Si carré complété : ‘Grelote ça picote’ et tu désignes qui boit.",
-      "Quand plus personne ne peut jouer : dernier appelé boit l’équivalent des cartes jouées."
-    ],
-    tips: ["Accélère le rythme : plus d’erreurs = plus de rires."],
-    tags: ["cartes","réflexe","vitesse"]
-  },
-  {
-    name: "Jeu des gros nichons",
-    slug: "gros-nichons",
-    summary: "Compter jusqu’à 21 avec les pouces directionnels. Oui, le nom est NSFW.",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: [],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "‘Qui veut jouer… ?’ Les motivés répondent ‘Chon’.",
-      "Comptez, et pointez le voisin suivant à gauche/droite avec le pouce.",
-      "À 21 : invente une nouvelle règle."
-    ],
-    tips: ["Variante ‘Bars’ : même principe, autre nom ; ajoute des règles aux nombres clés."],
-    tags: ["sans matériel","ambiance"]
-  },
-  {
-    name: "Jeu des signes",
-    slug: "jeu-des-signes",
-    summary: "Chaque joueur a un signe. On se passe le ‘tempo’ en rythme. L’erreur se boit.",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: [],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Tous tapent 2× genoux + 1× mains en rythme.",
-      "Le joueur A fait son signe au lieu de taper des mains, puis le signe de B.",
-      "B enchaîne (son signe puis un autre), et ainsi de suite. Raté = boit."
-    ],
-    tips: ["Accélère peu à peu, ça craque vite."],
-    tags: ["sans matériel","rythme"]
-  },
-  {
-    name: "Jeu des verres",
-    slug: "jeu-des-verres",
-    summary: "Relais de flips de verres par équipe. Derniers = gorgée + élimination d’un joueur.",
-    players: 2,
-    duration: 30,
-    noise: "fort",
-    equipment: ["verres (carton)"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Équipes de tailles égales ; chaque joueur doit ‘flipper’ son verre à l’endroit.",
-      "Derniers à finir : gorgée et un joueur éliminé (l’équipe tourne à effectif réduit).",
-      "La dernière équipe en lice gagne."
-    ],
-    tips: ["Mettez l’ambiance : ça fait toute la diff’."],
-    tags: ["gobelets","équipe","vitesse"]
-  },
-  {
-    name: "Jeu du con",
-    slug: "jeu-du-con",
-    summary: "Minuteur + distribution de gorgées. Le dernier à avoir bu perd (et boit le shot).",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: ["minuteur","1 shot"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Démarre un chrono commun (≈15 s/joueur).",
-      "À son tour, on désigne quelqu’un qui boit une gorgée.",
-      "À la fin du chrono, le dernier à avoir bu prend le shot."
-    ],
-    tips: ["Fais parler les gens pour leur faire oublier l’horloge."],
-    tags: ["ambiance","tempo"]
-  },
-  {
-    name: "Jeu du doigt",
-    slug: "jeu-du-doigt",
-    summary: "Doigt sur le verre. Annonce le nombre de doigts restants… et prie fort.",
-    players: 2,
-    duration: 30,
-    noise: "moyen",
-    equipment: [],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Tous posent un doigt sur un support au centre.",
-      "Le joueur actif annonce un nombre ; au ‘go’, chacun enlève ou garde son doigt.",
-      "Si l’annonce est juste, il sort du jeu ; sinon, il boit et reste."
-    ],
-    tips: ["Variantes ‘pouces’ à 2–3 joueurs : chaos garanti."],
-    tags: ["sans matériel","psychologie"]
-  },
-  {
-    name: "Killer",
-    slug: "killer",
-    summary: "Recharge, tire, protège-toi. Gère tes balles et tes boucliers, ou meurs (et bois).",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: [],
-    level: "Intermédiaire",
-    alcohol: "optionnel",
-    steps: [
-      "En rythme (2× genoux), choisis : recharger (max 3), tirer, ou bouclier (pas >2 d’affilée).",
-      "Un tir tue sauf bouclier ou tir simultané avec balle.",
-      "Mort = gorgée ; erreur de geste = gorgée."
-    ],
-    tips: ["En multi, tu peux tirer sur 2 cibles si tu as 2 balles."],
-    tags: ["sans matériel","duel","réflexe"]
-  },
-  {
-    name: "Kinito",
-    slug: "kinito",
-    summary: "Annonce de combis au gobelet. Croire ? Ne pas croire ? Bluffer ? (Oui.)",
-    players: 2,
-    duration: 30,
-    noise: "moyen",
-    equipment: ["2 dés","gobelet"],
-    level: "Intermédiaire",
-    alcohol: "optionnel",
-    steps: [
-      "Le joueur A lance à l’abri et annonce une combinaison ≥ à la précédente.",
-      "B choisit : croire (et relancer) ou accuser de bluff.",
-      "Perdre sur un double = boire la valeur ; sur Kinito… bon courage."
-    ],
-    tips: ["Quand ça pique, bluffe tôt : personne ne s’y attend."],
-    tags: ["dés","bluff"]
-  },
-  {
-    name: "La bataille",
-    slug: "bataille",
-    summary: "Plus haute carte gagne. En version ‘ouverte’, les shots s’invitent.",
-    players: 2,
-    duration: 20,
-    noise: "faible",
-    equipment: ["52 cartes","(option) 2 shots"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Chacun révèle la 1ère carte de son paquet ; plus haut gagne.",
-      "Égalité : ‘bataille’ (une face cachée + une face visible).",
-      "Variante ouverte : on gère un paquet référent et des shots à distribuer."
-    ],
-    tips: ["Pour dépanner quand on sait plus à quoi jouer."],
-    tags: ["cartes","classique"]
-  },
-  {
-    name: "La roulette russe (cartes)",
-    slug: "roulette-russe",
-    summary: "Un intrus dans le paquet : si tu le pioches, tu trinques.",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: ["52 cartes (partiel)","1 shot"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Mélange des cartes de même couleur + 1 d’autre couleur, face cachée.",
-      "Chacun pioche à son tour ; la carte ‘piégée’ fait boire (souvent le shot).",
-      "On remélange et on recommence."
-    ],
-    tips: ["Sur la dernière carte… c’est double peine."],
-    tags: ["cartes","hasard"]
-  },
-  {
-    name: "Le 51",
-    slug: "le-51",
-    summary: "Ne pas dépasser 51 dans le pot commun. Les têtes peuvent aider (ou pas).",
-    players: 2,
-    duration: 30,
-    noise: "moyen",
-    equipment: ["32 cartes","1 shot"],
-    level: "Intermédiaire",
-    alcohol: "optionnel",
-    steps: [
-      "4 cartes face cachée par joueur ; on ajoute tour à tour une carte au pot.",
-      "Si le total dépasse 51, le poseur boit le shot.",
-      "Valeurs spéciales : 9=0, 10=10 ou -10, As=1 ou 11, etc."
-    ],
-    tips: ["Parfait en début de soirée, calcul mental friendly."],
-    tags: ["cartes","compte"]
-  },
-  {
-    name: "Le 63ème parallèle",
-    slug: "63-parallele",
-    summary: "Enchères pour annoncer sans dépasser 63. Le monde est petit, la sanction grande.",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: ["52 cartes"],
-    level: "Intermédiaire",
-    alcohol: "optionnel",
-    steps: [
-      "À ton tour, regarde la carte du dessus : annonce et pose (le total grimpe) ou passe.",
-      "Dernier en jeu compte : <63 → autres boivent ; >63 → lui boit (× nb joueurs / paliers).",
-      "Égal à 63 : tout le monde (sauf le dernier) prend un shot."
-    ],
-    tips: ["Les têtes valent 10 ; ça grimpe très vite."],
-    tags: ["cartes","enchères"]
-  },
-  {
-    name: "Le Viking",
-    slug: "le-viking",
-    summary: "Un chef, des rameurs, des casques qui tournent. Se tromper, c’est boire.",
-    players: 4,
-    duration: 20,
-    noise: "fort",
-    equipment: [],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Le chef fait son geste (casque + va-et-vient), ses voisins rament à droite/gauche.",
-      "Le chef passe le casque à quelqu’un : il devient chef instantanément.",
-      "Ajoute un 2e chef si tout le monde suit : cerveau grillé assuré."
-    ],
-    tips: ["À 2 chefs, les bras partent dans tous les sens. Excellent."],
-    tags: ["sans matériel","ambiance","rythme"]
-  },
-  {
-    name: "PMU (course de valets)",
-    slug: "pmu",
-    summary: "Parie des gorgées sur ton ‘cheval’ (un valet). À chaque couleur tirée, il avance.",
-    players: 2,
-    duration: 20,
-    noise: "moyen",
-    equipment: ["52 cartes"],
-    level: "Débutant",
-    alcohol: "optionnel",
-    steps: [
-      "Aligne 4 valets (ligne de départ), prépare 5 paliers.",
-      "Retourne des cartes : la couleur fait avancer le valet associé.",
-      "Le premier qui franchit le dernier palier gagne."
-    ],
-    tips: ["Fais les paris d’abord (responsablement)."],
-    tags: ["cartes","pari","ambiance"]
-  }
-];
-// ===== fin du pack v1 =====
+    // ===== Données — Jeux de bar (pack v1) =====
+    const data = [
+      { name: "21", slug: "21", summary: "On compte jusqu’à 21… celui qui dit 21 boit et invente une règle. Chill, mais piégeux.", players: 2, duration: 30, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["Le 1er joueur dit 1 à 3 nombres à la suite.","Le suivant reprend et dit 1 à 3 nombres MAIS pas le même compte que son prédécesseur.","Celui qui tombe sur 21 boit et crée une nouvelle règle."], tips:["Mets le tempo pour pousser à l’erreur.","Ne rappelle pas trop les règles… c’est plus drôle quand ça déraille."], tags:["ambiance","sans matériel","classique"] },
+      { name: "21 Dés", slug: "21-des", summary: "Lance le dé et additionne : dépasser 21, c’est boire. Clair, net, précis.", players: 2, duration: 20, noise: "moyen", equipment: ["1 dé"], level: "Débutant", alcohol: "optionnel", steps:["Chacun lance le dé à son tour et ajoute au total.","Si tu dépasses 21, tu bois et on repart."], tips:["Se joue très bien en ‘fond de soirée’ en parallèle d’un autre jeu."], tags:["dés","rapide"] },
+      { name: "421", slug: "421", summary: "3 dés, 3 lancers. 421 > brelan > suite > paire… Que le meilleur bluffeur gagne.", players: 2, duration: 30, noise: "moyen", equipment: ["3 dés","gobelet (optionnel)"], level: "Tous niveaux", alcohol: "optionnel", steps:["Chaque joueur lance jusqu’à 3 fois (en gardant les dés choisis).","Comparez les combinaisons : 421 au sommet, puis brelans, suites…","Le perdant boit, le gagnant distribue."], tips:["Un sous-bock fait une bonne piste à dés.","Idéal en 1v1 tranquille."], tags:["dés","classique"] },
+      { name: "7 - 14 - 21", slug: "7-14-21", summary: "On chasse les ‘1’ avec 3 dés. À 7 et 14, on fixe l’alcool et les gorgées. À 21… aïe.", players: 2, duration: 30, noise: "moyen", equipment: ["3 dés"], level: "Débutant", alcohol: "optionnel", steps:["Lance 3 dés. Au moins un ‘1’ ? Ajoute ce nombre au total et rejoue ; sinon, passe.","À 7 : on choisit la boisson ; à 14 : le nombre de gorgées.","Le joueur qui atteint 21 boit ce qui a été fixé."], tips:["Si le 0→7/7→14/14→21 se fait d’un coup, tous les autres boivent."], tags:["dés","ambiance"] },
+      { name: "9 ou Valet", slug: "9-ou-valet", summary: "Tu devines la carte. Tu rates ? Tu bois. Tu réussis ? Il boit. Simple, efficace.", players: 2, duration: 10, noise: "moyen", equipment: ["52 cartes"], level: "Débutant", alcohol: "optionnel", steps:["Le donneur demande : “9 ou Valet ?” (ou une autre hauteur).","Le devineur annonce. On retourne : gagnant boit/donne à boire."], tips:["Ne préviens pas des règles au devineur… c’est meilleur à cru."], tags:["cartes","rapide"] },
+      { name: "Autoroute", slug: "autoroute", summary: "Traverser 7 cartes en devinant plus/moins/égal. Le bitume est glissant.", players: 2, duration: 10, noise: "moyen", equipment: ["52 cartes"], level: "Débutant", alcohol: "optionnel", steps:["Pose 7 cartes face cachée.","Devine si la suivante est plus, moins ou égale ; erreur = tu bois et tu recommences.","À la 4e carte, tu gagnes 2 ‘chances’ bonus."], tips:["Varie la longueur de l’autoroute selon le niveau."], tags:["cartes","adresse"] },
+      { name: "Beer Pong (version soft)", slug: "beer-pong", summary: "Balles + gobelets en triangle. Mets dedans, retire le verre. Oui, c’est mythique.", players: 4, duration: 30, noise: "fort", equipment: ["2 balles de ping-pong","20 gobelets","table"], level: "Débutant", alcohol: "optionnel", steps:["Deux pyramides de 10 gobelets, bras sans dépasser la table pour lancer.","Touché = on retire le gobelet ; un rebond est autorisé.","Réorganisation des gobelets possible 1 fois / partie."], tips:["Mets de l’eau dans les gobelets et bois dans ton verre : hygiène ++."], tags:["adresse","tournoi","gobelets"] },
+      { name: "Belote de comptoir", slug: "belote-de-comptoir", summary: "Belote express avec enchères, atout et shot au milieu. Pour les poivrots stratèges.", players: 2, duration: 30, noise: "moyen", equipment: ["32 cartes","1 shot (au centre)"], level: "Confirmé", alcohol: "optionnel", steps:["Chaque joueur reçoit 1–5 cartes (même nombre chacun).","Enchères sur le nombre de points, choix de l’atout, puis plis.","Si le contrat est tenu : donner le shot ; sinon : le boire."], tips:["Clarifiez les variantes avant (belote/rebelote, carte visible, etc.)."], tags:["cartes","stratégie"] },
+      { name: "Black Jack (maison)", slug: "black-jack", summary: "Approche 21 sans exploser. La banque boit pour tous ses péchés.", players: 2, duration: 20, noise: "moyen", equipment: ["52 cartes"], level: "Tous niveaux", alcohol: "optionnel", steps:["Chaque joueur parie des gorgées. 2 cartes aux joueurs, 1 à la banque.","Hit/Stand/Doubler/Split selon ta main ; au-delà de 21 : perdu.","La banque tire jusqu’à ≥17, puis compare les scores et boit/ fait boire."], tips:["Le BlackJack (As+10) bat un simple 21."], tags:["cartes","classique"] },
+      { name: "Caps", slug: "caps", summary: "Fais tomber la capsule de l’autre. Si ça tombe dans la bouteille : cul-sec !", players: 2, duration: 20, noise: "moyen", equipment: ["2 capsules","bouteilles"], level: "Débutant", alcohol: "optionnel", steps:["Capsules posées sur les bouteilles ; on lance sa capsule pour faire tomber celle des autres.","Capsule tombée = l’autre boit ; tombée dans la bouteille = cul-sec."], tips:["Prévois une zone de tir dédiée (évite la casse)."], tags:["adresse","capsules"] },
+      { name: "Chifoumi", slug: "chifoumi", summary: "Pierre-Feuille-Ciseaux pour régler tout et rien. Shot/gorgée en mise légère.", players: 2, duration: 10, noise: "faible", equipment: [], level: "Débutant", alcohol: "optionnel", steps:["Pierre bat Ciseaux, Ciseaux bat Feuille, Feuille bat Pierre.","Joue en manche courte pour départager fissa."], tips:["Parfait pour arbitrer un débat d’experts."], tags:["sans matériel","rapide"] },
+      { name: "Chifoumi chinois", slug: "chifoumi-chinois", summary: "Chifoumi… mais en cartes (3×6 cartes). Le shot attend le perdant.", players: 2, duration: 20, noise: "moyen", equipment: ["18 cartes (3 signes × 6)","1 shot"], level: "Débutant", alcohol: "optionnel", steps:["Choisir 3 signes (ex : ♠=Pierre, ♣=Feuille, ♦=Ciseaux).","Chacun révèle une carte en même temps ; perdant boit le shot.","Jusqu’à épuisement des 3 cartes de chacun."], tips:["Varie le nombre de cartes pour des manches plus longues."], tags:["cartes","duel"] },
+      { name: "Chochoï (cercles de cartes)", slug: "chochoi", summary: "Le cercle ne doit pas se briser. Et la pile au sommet doit tenir !", players: 2, duration: 45, noise: "moyen", equipment: ["52 cartes","bouteille (support)","1 shot"], level: "Intermédiaire", alcohol: "optionnel", steps:["Dispose un cercle de cartes autour d’une bouteille, pioche sans casser le cercle.","Applique l’action liée à la carte (règles spécial ‘palmier’).","Finir son tour en posant sa carte sur la bouteille (deux coins dépassent)."], tips:["Si le cercle casse ou la pile tombe : shot !"], tags:["cartes","ambiance","long"] },
+      { name: "Dixit (2 dés)", slug: "dixit-des", summary: "Lance 2 dés : 3 = crée/supprime règle, 7 = ‘Dixit’… et ainsi de suite.", players: 2, duration: 45, noise: "moyen", equipment: ["2 dés"], level: "Tous niveaux", alcohol: "optionnel", steps:["Lance 2 dés et applique l’effet (3=nouvelle règle, 7=Dixit, 9=précédent boit, 10=toi, 11=suivant…).","Double = distribue ce nombre de gorgées.","Le ‘prisonnier’ boit quand un 3 sort (jusqu’à se libérer en faisant 3)."], tips:["Note les règles inventées… ou pas, c’est le bazar voulu."], tags:["dés","ambiance","règles évolutives"] },
+      { name: "French Banger", slug: "french-banger", summary: "Flip de gobelet en duel : rapproche le shot de l’adversaire, ou bois.", players: 2, duration: 10, noise: "fort", equipment: ["1 shot","2 gobelets"], level: "Débutant", alcohol: "optionnel", steps:["Deux joueurs face à face, shot au milieu ; 3 allumettes comme ‘paliers’.","Chaque flip réussi déplace le shot vers l’adversaire.","Quand le shot arrive chez toi : tu bois."], tips:["En carton (les gobelets), la planète te dit merci."], tags:["gobelets","duel","rapide"] },
+      { name: "Fuck the dealer", slug: "fuck-the-dealer", summary: "Devine la carte du dessus ; le dealer trinque (ou te fait trinquer).", players: 3, duration: 45, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps:["Le dealer fait deviner la carte du dessus.","1ère tentative : juste = dealer boit 5 ; faux = ‘plus/moins’.","2e tentative : juste = dealer boit 3 ; faux = tu bois l’écart."], tips:["Au 3e échec d’affilée, le rôle de dealer peut tourner."], tags:["cartes","bluff"] },
+      { name: "Grelote ça Picote", slug: "grelote-ca-picote", summary: "Défausse rapide en criant des noms. Si tu traînes, tu trinques.", players: 2, duration: 30, noise: "fort", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps:["3 cartes en main ; on pose sur la dernière carte jouée (même signe ou même hauteur) en appelant un joueur.","Si carré complété : ‘Grelote ça picote’ et tu désignes qui boit.","Quand plus personne ne peut jouer : dernier appelé boit l’équivalent des cartes jouées."], tips:["Accélère le rythme : plus d’erreurs = plus de rires."], tags:["cartes","réflexe","vitesse"] },
+      { name: "Jeu des gros nichons", slug: "gros-nichons", summary: "Compter jusqu’à 21 avec les pouces directionnels. Oui, le nom est NSFW.", players: 2, duration: 20, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps:["‘Qui veut jouer… ?’ Les motivés répondent ‘Chon’.","Comptez, et pointez le voisin suivant à gauche/droite avec le pouce.","À 21 : invente une nouvelle règle."], tips:["Variante ‘Bars’ : même principe, autre nom ; ajoute des règles aux nombres clés."], tags:["sans matériel","ambiance"] },
+      { name: "Jeu des signes", slug: "jeu-des-signes", summary: "Chaque joueur a un signe. On se passe le ‘tempo’ en rythme. L’erreur se boit.", players: 2, duration: 20, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps:["Tous tapent 2× genoux + 1× mains en rythme.","Le joueur A fait son signe au lieu de taper des mains, puis le signe de B.","B enchaîne (son signe puis un autre), et ainsi de suite. Raté = boit."], tips:["Accélère peu à peu, ça craque vite."], tags:["sans matériel","rythme"] },
+      { name: "Jeu des verres", slug: "jeu-des-verres", summary: "Relais de flips de verres par équipe. Derniers = gorgée + élimination d’un joueur.", players: 2, duration: 30, noise: "fort", equipment: ["verres (carton)"], level: "Débutant", alcohol: "optionnel", steps:["Équipes de tailles égales ; chaque joueur doit ‘flipper’ son verre à l’endroit.","Derniers à finir : gorgée et un joueur éliminé (l’équipe tourne à effectif réduit).","La dernière équipe en lice gagne."], tips:["Mettez l’ambiance : ça fait toute la diff’."], tags:["gobelets","équipe","vitesse"] },
+      { name: "Jeu du con", slug: "jeu-du-con", summary: "Minuteur + distribution de gorgées. Le dernier à avoir bu perd (et boit le shot).", players: 2, duration: 20, noise: "moyen", equipment: ["minuteur","1 shot"], level: "Débutant", alcohol: "optionnel", steps:["Démarre un chrono commun (≈15 s/joueur).","À son tour, on désigne quelqu’un qui boit une gorgée.","À la fin du chrono, le dernier à avoir bu prend le shot."], tips:["Fais parler les gens pour leur faire oublier l’horloge."], tags:["ambiance","tempo"] },
+      { name: "Jeu du doigt", slug: "jeu-du-doigt", summary: "Doigt sur le verre. Annonce le nombre de doigts restants… et prie fort.", players: 2, duration: 30, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps:["Tous posent un doigt sur un support au centre.","Le joueur actif annonce un nombre ; au ‘go’, chacun enlève ou garde son doigt.","Si l’annonce est juste, il sort du jeu ; sinon, il boit et reste."], tips:["Variantes ‘pouces’ à 2–3 joueurs : chaos garanti."], tags:["sans matériel","psychologie"] },
+      { name: "Killer", slug: "killer", summary: "Recharge, tire, protège-toi. Gère tes balles et tes boucliers, ou meurs (et bois).", players: 2, duration: 20, noise: "moyen", equipment: [], level: "Intermédiaire", alcohol: "optionnel", steps:["En rythme (2× genoux), choisis : recharger (max 3), tirer, ou bouclier (pas >2 d’affilée).","Un tir tue sauf bouclier ou tir simultané avec balle.","Mort = gorgée ; erreur de geste = gorgée."], tips:["En multi, tu peux tirer sur 2 cibles si tu as 2 balles."], tags:["sans matériel","duel","réflexe"] },
+      { name: "Kinito", slug: "kinito", summary: "Annonce de combis au gobelet. Croire ? Ne pas croire ? Bluffer ? (Oui.)", players: 2, duration: 30, noise: "moyen", equipment: ["2 dés","gobelet"], level: "Intermédiaire", alcohol: "optionnel", steps:["Le joueur A lance à l’abri et annonce une combinaison ≥ à la précédente.","B choisit : croire (et relancer) ou accuser de bluff.","Perdre sur un double = boire la valeur ; sur Kinito… bon courage."], tips:["Quand ça pique, bluffe tôt : personne ne s’y attend."], tags:["dés","bluff"] },
+      { name: "La bataille", slug: "bataille", summary: "Plus haute carte gagne. En version ‘ouverte’, les shots s’invitent.", players: 2, duration: 20, noise: "faible", equipment: ["52 cartes","(option) 2 shots"], level: "Débutant", alcohol: "optionnel", steps:["Chacun révèle la 1ère carte de son paquet ; plus haut gagne.","Égalité : ‘bataille’ (une face cachée + une face visible).","Variante ouverte : on gère un paquet référent et des shots à distribuer."], tips:["Pour dépanner quand on sait plus à quoi jouer."], tags:["cartes","classique"] },
+      { name: "La roulette russe (cartes)", slug: "roulette-russe", summary: "Un intrus dans le paquet : si tu le pioches, tu trinques.", players: 2, duration: 20, noise: "moyen", equipment: ["52 cartes (partiel)","1 shot"], level: "Débutant", alcohol: "optionnel", steps:["Mélange des cartes de même couleur + 1 d’autre couleur, face cachée.","Chacun pioche à son tour ; la carte ‘piégée’ fait boire (souvent le shot).","On remélange et on recommence."], tips:["Sur la dernière carte… c’est double peine."], tags:["cartes","hasard"] },
+      { name: "Le 51", slug: "le-51", summary: "Ne pas dépasser 51 dans le pot commun. Les têtes peuvent aider (ou pas).", players: 2, duration: 30, noise: "moyen", equipment: ["32 cartes","1 shot"], level: "Intermédiaire", alcohol: "optionnel", steps:["4 cartes face cachée par joueur ; on ajoute tour à tour une carte au pot.","Si le total dépasse 51, le poseur boit le shot.","Valeurs spéciales : 9=0, 10=10 ou -10, As=1 ou 11, etc."], tips:["Parfait en début de soirée, calcul mental friendly."], tags:["cartes","compte"] },
+      { name: "Le 63ème parallèle", slug: "63-parallele", summary: "Enchères pour annoncer sans dépasser 63. Le monde est petit, la sanction grande.", players: 2, duration: 20, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps:["À ton tour, regarde la carte du dessus : annonce et pose (le total grimpe) ou passe.","Dernier en jeu compte : <63 → autres boivent ; >63 → lui boit (× nb joueurs / paliers).","Égal à 63 : tout le monde (sauf le dernier) prend un shot."], tips:["Les têtes valent 10 ; ça grimpe très vite."], tags:["cartes","enchères"] },
+      { name: "Le Viking", slug: "le-viking", summary: "Un chef, des rameurs, des casques qui tournent. Se tromper, c’est boire.", players: 4, duration: 20, noise: "fort", equipment: [], level: "Débutant", alcohol: "optionnel", steps:["Le chef fait son geste (casque + va-et-vient), ses voisins rament à droite/gauche.","Le chef passe le casque à quelqu’un : il devient chef instantanément.","Ajoute un 2e chef si tout le monde suit : cerveau grillé assuré."], tips:["À 2 chefs, les bras partent dans tous les sens. Excellent."], tags:["sans matériel","ambiance","rythme"] },
+      { name: "PMU (course de valets)", slug: "pmu", summary: "Parie des gorgées sur ton ‘cheval’ (un valet). À chaque couleur tirée, il avance.", players: 2, duration: 20, noise: "moyen", equipment: ["52 cartes"], level: "Débutant", alcohol: "optionnel", steps:["Aligne 4 valets (ligne de départ), prépare 5 paliers.","Retourne des cartes : la couleur fait avancer le valet associé.","Le premier qui franchit le dernier palier gagne."], tips:["Fais les paris d’abord (responsablement)."], tags:["cartes","pari","ambiance"] }
+    ];
 
-
-
-    
+    // ===== Sélecteurs & état =====
     const list = document.getElementById('list');
     const tpl = document.getElementById('card-tpl');
     const q = document.getElementById('q');
-    const playerChecks = document.querySelectorAll('input[name="players"]');
-    const durationChecks = document.querySelectorAll('input[name="duration"]');
-    const matChecks = document.querySelectorAll('input[name="mat"]');
-    const count = document.getElementById('count');
     const count = document.getElementById('count');
     const randomBtn = document.getElementById('randomBtn');
     const homeLink = document.getElementById('homeLink');
@@ -738,43 +210,41 @@ const data = [
     const durationChecks = document.querySelectorAll('input[name="duration"]');
     const matChecks = document.querySelectorAll('input[name="mat"]');
 
-  // Éphéméride — phrases du jour (échantillon, tu peux en mettre 366)
-  const ephemeridePhrases = [
-  "La meilleure règle du bar : on s'amuse, on partage.",
-  "Aujourd'hui, on découvre un nouveau jeu.",
-  "Un petit défi vaut mieux que mille excuses.",
-  "Rire fort, jouer fair-play.",
-  "Le hasard fait bien les jeux.",
-  "On mélange les équipes, on double le fun.",
-  "La victoire est douce, la revanche encore plus.",
-  "Un tour rapide ? On dit oui !",
-  "Le meilleur matériel, c'est l'envie de jouer.",
-  "On essaye, on rate, on recommence.",
-  "Ce soir, un classique et une nouveauté.",
-  "Le bar est une table de jeu géante.",
-  "Qui perd paye… un sourire.",
-  "On range les téléphones, on sort les dés.",
-  "Une manche courte en appelle une autre.",
-  "On joue pour créer des souvenirs.",
-  "La chance sourit aux audacieux.",
-  "Le secret d'une bonne soirée : de bons partenaires.",
-  "Aujourd'hui, c'est vous le maître du quiz.",
-  "Un peu de stratégie, beaucoup de rires.",
-  "Règles simples, plaisir maximum.",
-  "Le fair-play, c'est la classe.",
-  "Un nouveau jeu par semaine, au moins !",
-  "On applaudit les beaux coups.",
-  "La meilleure revanche : rejouer.",
-  "Faites une pause, lancez un dé.",
-  "Tout le monde peut gagner une manche.",
-  "La soirée commence avec un « Jeu aléatoire »."
-];
-function dayOfYear(d){ const start=new Date(d.getFullYear(),0,0); const diff=d-start; const oneDay=1000*60*60*24; return Math.floor(diff/oneDay); }
-function renderEphemeride(){ const i=dayOfYear(new Date()); const t=ephemeridePhrases[i % ephemeridePhrases.length]; const el=document.getElementById('quote'); if(el) el.textContent=t; }
+    // Éphéméride — phrases du jour (échantillon, tu peux en mettre 366)
+    const ephemeridePhrases = [
+      "La meilleure règle du bar : on s'amuse, on partage.",
+      "Aujourd'hui, on découvre un nouveau jeu.",
+      "Un petit défi vaut mieux que mille excuses.",
+      "Rire fort, jouer fair-play.",
+      "Le hasard fait bien les jeux.",
+      "On mélange les équipes, on double le fun.",
+      "La victoire est douce, la revanche encore plus.",
+      "Un tour rapide ? On dit oui !",
+      "Le meilleur matériel, c'est l'envie de jouer.",
+      "On essaye, on rate, on recommence.",
+      "Ce soir, un classique et une nouveauté.",
+      "Le bar est une table de jeu géante.",
+      "Qui perd paye… un sourire.",
+      "On range les téléphones, on sort les dés.",
+      "Une manche courte en appelle une autre.",
+      "On joue pour créer des souvenirs.",
+      "La chance sourit aux audacieux.",
+      "Le secret d'une bonne soirée : de bons partenaires.",
+      "Aujourd'hui, c'est vous le maître du quiz.",
+      "Un peu de stratégie, beaucoup de rires.",
+      "Règles simples, plaisir maximum.",
+      "Le fair-play, c'est la classe.",
+      "Un nouveau jeu par semaine, au moins !",
+      "On applaudit les beaux coups.",
+      "La meilleure revanche : rejouer.",
+      "Faites une pause, lancez un dé.",
+      "Tout le monde peut gagner une manche.",
+      "La soirée commence avec un « Jeu aléatoire »"
+    ];
+    function dayOfYear(d){ const start=new Date(d.getFullYear(),0,0); const diff=d-start; const oneDay=1000*60*60*24; return Math.floor(diff/oneDay); }
+    function renderEphemeride(){ const i=dayOfYear(new Date()); const t=ephemeridePhrases[i % ephemeridePhrases.length]; const el=document.getElementById('quote'); if(el) el.textContent=t; }
 
-    
-let lastResults = [];
-
+    let lastResults = [];
 
     function durationBucket(mins){
       if(mins<10) return '<10';
@@ -802,110 +272,99 @@ let lastResults = [];
       list.innerHTML='';
       items.forEach(g=>{
         const node = tpl.content.cloneNode(true);
+        const article = node.querySelector('article');
+        const slug = (g.slug || g.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));
+        article.dataset.slug = slug;
+
         node.querySelector('.title').textContent = g.name;
         node.querySelector('.desc').textContent = g.summary;
+
         const meta = node.querySelector('.meta');
-        const pills = [
-          `${g.players}+ joueurs`,
-          `${g.duration} min`,
-          `Bruit : ${g.noise}`,
-          `Niveau : ${g.level}`,
-        ];
-        pills.forEach(p=>{
-          const span = document.createElement('span');
-          span.className='pill';
-          span.textContent=p; meta.appendChild(span);
-        });
+        const pills = [ `${g.players}+ joueurs`, `${g.duration} min`, `Niveau : ${g.level}` ];
+        pills.forEach(p=>{ const span=document.createElement('span'); span.className='pill'; span.textContent=p; meta.appendChild(span); });
+
         const steps = node.querySelector('.steps');
         g.steps.forEach(s=>{const li=document.createElement('li');li.textContent=s;steps.appendChild(li)});
+
         const badges = node.querySelector('.badges');
-        const equip = document.createElement('span');
-        equip.className='pill'; equip.textContent = `Matériel : ${g.equipment.join(', ')||'—'}`; badges.appendChild(equip);
+        const equip = document.createElement('span'); equip.className='pill'; equip.textContent = `Matériel : ${g.equipment.join(', ')||'—'}`; badges.appendChild(equip);
         const alcohol = document.createElement('span'); alcohol.className='pill'; alcohol.textContent = `Alcool : ${g.alcohol}`; badges.appendChild(alcohol);
         const tags = document.createElement('span'); tags.className='pill'; tags.textContent = `Tags : ${g.tags.join(', ')}`; badges.appendChild(tags);
+
         list.appendChild(node);
       });
+      lastResults = items;
       count.textContent = `${items.length} jeu(x)`;
-      const article = node.querySelector('article');
-article.dataset.slug = g.slug || g.name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
-// ... (le reste inchangé)
-lastResults = items;
-
     }
 
-function filter(){
-  const query = q.value.trim().toLowerCase();
-  const psel = Array.from(document.querySelectorAll('input[name="players"]:checked')).map(i=>parseInt(i.value));
-  const dsel = Array.from(document.querySelectorAll('input[name="duration"]:checked')).map(i=>i.value);
-  const msel = Array.from(document.querySelectorAll('input[name="mat"]:checked')).map(i=>i.value);
+    function filter(){
+      const query = q.value.trim().toLowerCase();
+      const psel = Array.from(document.querySelectorAll('input[name="players"]:checked')).map(i=>parseInt(i.value));
+      const dsel = Array.from(document.querySelectorAll('input[name="duration"]:checked')).map(i=>i.value);
+      const msel = Array.from(document.querySelectorAll('input[name="mat"]:checked')).map(i=>i.value);
 
-  let items = data.filter(g=>{
-    const hay = [g.name, g.summary, g.tags.join(' '), g.equipment.join(' '), g.level].join(' ').toLowerCase();
-    const qok = !query || hay.includes(query);
-    const pok = psel.length===0 || psel.some(v=> g.players >= v);
-    const dok = dsel.length===0 || dsel.includes(durationBucket(g.duration));
-    const mats = getMaterialCats(g);
-    const mok = msel.length===0 || msel.some(m=> mats.includes(m));
-    return qok && pok && dok && mok;
-  });
+      const items = data.filter(g=>{
+        const hay = [g.name, g.summary, g.tags.join(' '), g.equipment.join(' '), g.level].join(' ').toLowerCase();
+        const qok = !query || hay.includes(query);
+        const pok = psel.length===0 || psel.some(v=> g.players >= v);
+        const dok = dsel.length===0 || dsel.includes(durationBucket(g.duration));
+        const mats = getMaterialCats(g);
+        const mok = msel.length===0 || msel.some(m=> mats.includes(m));
+        return qok && pok && dok && mok;
+      });
 
-  render(items);
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+      render(items);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
 
-function updateSummary(id, values){
-  const el = document.getElementById(id);
-  el.textContent = values.length ? values.join(', ') : (id.includes('players')? 'Tous' : (id.includes('duration')? 'Toutes' : 'Tous'));
-}
-function updateAllSummaries(){
-  const p = Array.from(document.querySelectorAll('input[name="players"]:checked')).map(i=>i.value+'+');
-  const d = Array.from(document.querySelectorAll('input[name="duration"]:checked')).map(i=>i.value);
-  const m = Array.from(document.querySelectorAll('input[name="mat"]:checked')).map(i=>i.value);
-  updateSummary('playersSummary', p);
-  updateSummary('durationSummary', d);
-  updateSummary('materialSummary', m);
-}
+    function updateSummary(id, values){
+      const el = document.getElementById(id);
+      el.textContent = values.length ? values.join(', ') : (id.includes('players')? 'Tous' : (id.includes('duration')? 'Toutes' : 'Tous'));
+    }
+    function updateAllSummaries(){
+      const p = Array.from(document.querySelectorAll('input[name="players"]:checked')).map(i=>i.value+'+');
+      const d = Array.from(document.querySelectorAll('input[name="duration"]:checked')).map(i=>i.value);
+      const m = Array.from(document.querySelectorAll('input[name="mat"]:checked')).map(i=>i.value);
+      updateSummary('playersSummary', p);
+      updateSummary('durationSummary', d);
+      updateSummary('materialSummary', m);
+    }
 
-q.addEventListener('input', filter);
-playerChecks.forEach(el=>el.addEventListener('change', filter));
-durationChecks.forEach(el=>el.addEventListener('change', filter));
-matChecks.forEach(el=>el.addEventListener('change', filter));
+    // Listeners
+    q.addEventListener('input', ()=>{ filter(); });
+    playerChecks.forEach(el=>el.addEventListener('change', ()=>{ updateAllSummaries(); filter(); }));
+    durationChecks.forEach(el=>el.addEventListener('change', ()=>{ updateAllSummaries(); filter(); }));
+    matChecks.forEach(el=>el.addEventListener('change', ()=>{ updateAllSummaries(); filter(); }));
 
-render(data);
-// fermer un dropdown si on clique ailleurs
-document.addEventListener('click', (e)=>{
-  document.querySelectorAll('details.multi[open]').forEach(d=>{
-    if(!d.contains(e.target)) d.removeAttribute('open');
-  });
-});
+    // Fermer un dropdown si clic en dehors
+    document.addEventListener('click', (e)=>{
+      document.querySelectorAll('details.multi[open]').forEach(d=>{ if(!d.contains(e.target)) d.removeAttribute('open'); });
+    });
 
-// bouton Jeu aléatoire
-randomBtn.addEventListener('click', ()=>{
-  const pool = lastResults.length ? lastResults : data;
-  if(!pool.length) return;
-  const pick = pool[Math.floor(Math.random()*pool.length)];
-  const slug = (pick.slug || pick.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));
-  const el = document.querySelector(`[data-slug="${slug}"]`);
-  if(el){
-    el.classList.add('highlight');
-    el.scrollIntoView({behavior:'smooth', block:'center'});
-    setTimeout(()=>el.classList.remove('highlight'), 2000);
-  }
-});
+    // Jeu aléatoire
+    randomBtn.addEventListener('click', ()=>{
+      const pool = lastResults.length ? lastResults : data;
+      if(!pool.length) return;
+      const pick = pool[Math.floor(Math.random()*pool.length)];
+      const slug = (pick.slug || pick.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));
+      const el = document.querySelector(`[data-slug="${slug}"]`);
+      if(el){ el.classList.add('highlight'); el.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(()=>el.classList.remove('highlight'), 2000); }
+    });
 
-// clic sur la bière = retour page d’accueil + reset filtres
-homeLink.addEventListener('click', (e)=>{
-  e.preventDefault();
-  q.value='';
-  document.querySelectorAll('details.multi input[type="checkbox"]').forEach(c=>c.checked=false);
-  updateAllSummaries();
-  filter();
-  window.scrollTo({top:0,behavior:'smooth'});
-});
+    // Clic logo = reset filtres & haut de page
+    homeLink.addEventListener('click', (e)=>{
+      e.preventDefault();
+      q.value='';
+      document.querySelectorAll('details.multi input[type="checkbox"]').forEach(c=>c.checked=false);
+      updateAllSummaries();
+      filter();
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
 
+    // Init
+    render(data);
     updateAllSummaries();
     renderEphemeride();
-
   </script>
 </body>
 </html>
