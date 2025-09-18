@@ -388,6 +388,101 @@ data.push(...more);
     render(data);
     updateAllSummaries();
     renderEphemeride();
+
+// ===== "Pages" de détail =====
+const controls = document.querySelector('.controls');
+const toolbar = document.querySelector('.toolbar');
+const detail = document.getElementById('detail');
+
+function slugify(t){ return (t||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+
+function ficheHTML(g){
+  const equip = g.equipment.join(', ') || '—';
+  const tags = (g.tags||[]).join(', ');
+  const tips = (g.tips||[]).map(t=>`<li>${t}</li>`).join('') || '<li>Amusez-vous bien ✨</li>';
+  const steps = (g.steps||[]).map(s=>`<li>${s}</li>`).join('') || '<li>Pas de règles… c’est freestyle.</li>';
+  return `
+    <a class="btn" href="#" id="backBtn">← Retour à la liste</a>
+    <h2 style="margin-top:10px">${g.name}</h2>
+    <p class="desc" style="margin:6px 0 14px">${g.summary||''}</p>
+    <div class="meta" style="margin-bottom:10px">
+      <span class="pill">${g.players}+ joueurs</span>
+      <span class="pill">${g.duration} min</span>
+      <span class="pill">Niveau : ${g.level||'—'}</span>
+    </div>
+    <div class="badges" style="margin-bottom:14px">
+      <span class="pill">Matériel : ${equip}</span>
+      <span class="pill">Alcool : ${g.alcohol||'optionnel'}</span>
+      <span class="pill">Tags : ${tags}</span>
+    </div>
+    <h3>Règles détaillées</h3>
+    <ol class="steps">${steps}</ol>
+    <h3>Conseils</h3>
+    <ul>${tips}</ul>
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+      <a class="btn" href="#jeu/${g.slug||slugify(g.name)}">Partager cette fiche</a>
+      <a class="btn" href="#" id="randomFromDetail">Jeu aléatoire</a>
+    </div>
+  `;
+}
+
+function showDetail(g){
+  // masque la vue liste + filtres
+  controls.hidden = true;
+  toolbar.hidden = true;
+  list.hidden = true;
+
+  // affiche la fiche
+  detail.hidden = false;
+  detail.innerHTML = ficheHTML(g);
+
+  // actions locales
+  detail.querySelector('#backBtn').addEventListener('click', (e)=>{
+    e.preventDefault();
+    location.hash = ''; // retour
+  });
+  const rnd = detail.querySelector('#randomFromDetail');
+  if(rnd){
+    rnd.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const pool = data; // tu peux prendre lastResults si tu veux respecter les filtres
+      const pick = pool[Math.floor(Math.random()*pool.length)];
+      location.hash = '#jeu/' + (pick.slug || slugify(pick.name));
+    });
+  }
+}
+
+function goHome(){
+  // montre la vue liste + filtres
+  detail.hidden = true;
+  controls.hidden = false;
+  toolbar.hidden = false;
+  list.hidden = false;
+  // assure que la liste est visible (utile si on est arrivé par un lien direct)
+  if(!list.children.length) render(data);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function resolveBySlug(s){
+  return data.find(g => (g.slug || slugify(g.name)) === s);
+}
+
+function onHashChange(){
+  const m = location.hash.match(/^#jeu\/(.+)$/);
+  if(m){
+    const slug = decodeURIComponent(m[1]);
+    const g = resolveBySlug(slug);
+    if(g) { showDetail(g); return; }
+  }
+  goHome();
+}
+
+window.addEventListener('hashchange', onHashChange);
+// ouvrir directement une fiche si l’URL en contient une
+onHashChange();
+
+
+    
   </script>
 </body>
 </html>
