@@ -11,7 +11,7 @@
   <style>
     :root{
       --bg:#fdfbf7;--card:#fffefc;--muted:#5f5b56;--text:#2c2620;--accent:#c97a3d;--accent2:#946846;--ok:#387f39;--warn:#b08900;--danger:#b54747;
-      --radius:10px;--shadow:0 3px 10px rgba(0,0,0,.1)
+      --radius:12px;--shadow:0 6px 18px rgba(0,0,0,.08)
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:linear-gradient(180deg, var(--bg) 0%, #f3efe7 100%);color:var(--text);font:16px/1.6 Nunito,system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,"Helvetica Neue",Arial}
@@ -19,7 +19,7 @@
     header{background:linear-gradient(90deg, #d7c4a5, #f5ead7);border-bottom:2px solid #e2d3b7}
     .wrap{max-width:1000px;margin:0 auto;padding:20px}
     .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:42px;height:42px;border-radius:8px;background:#c97a3d;color:white;font-weight:bold;font-size:20px;display:grid;place-items:center;box-shadow:var(--shadow)}
+    .logo{width:42px;height:42px;border-radius:10px;background:#c97a3d;color:white;font-weight:bold;font-size:20px;display:grid;place-items:center;box-shadow:var(--shadow);text-decoration:none}
     h1{font-size:26px;margin:0;font-family:"Playfair Display",serif;color:var(--accent2)}
     .tagline{color:var(--muted);font-size:15px;margin-top:4px;font-style:italic}
 
@@ -31,17 +31,22 @@
     .multi summary::-webkit-details-marker{display:none}
     .multi[open]{box-shadow:var(--shadow)}
     .multi .panel{position:absolute;z-index:30;background:#fff;border:1px solid #eadfce;border-radius:12px;padding:10px;top:calc(100% + 6px);left:0;right:0;display:grid;gap:8px}
-    .multi label{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px}
+    .multi label{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;transition:background .2s,border-color .2s}
+    .multi .panel label:hover{background:#fff5e8}
+    /* surbrillance visuelle quand une case est cochée */
+    .multi .panel label:has(input:checked){background:#fff2df;border:1px solid #e6c9a3}
     .multi input[type=checkbox]{accent-color: var(--accent)}
     .multi summary em{color:#7a5a40;font-style:normal;font-weight:700;font-size:12px}
     .multi summary span{font-weight:800;font-size:12px;letter-spacing:.02em;color:#7a5a40}
 
-    /* Surbrillance pour le jeu aléatoire */
+    /* Surbrillance pour le jeu aléatoire + cartes */
     .highlight{outline:2px solid var(--accent2);animation:flash 1s ease-in-out 0s 2 alternate;border-radius:var(--radius)}
     @keyframes flash{from{background:#fff4df} to{background:#ffffff}}
 
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
-    .card{background:var(--card);border:1px solid #e2d9c9;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:10px}
+    .card{background:var(--card);border:1px solid #e2d9c9;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column;gap:10px;transition:box-shadow .2s,transform .12s,border-color .2s,background .2s}
+    .card:hover,.card:focus-within{box-shadow:0 10px 28px rgba(0,0,0,.12);border-color:#e3c7a3;background:#fffaf3}
+    .card details[open]{background:#fff7ea;border-radius:10px;padding:8px;margin-top:4px}
     .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid #d0c4b0;font-size:12px;color:var(--muted);background:#faf6ef}
     .meta{display:flex;flex-wrap:wrap;gap:8px}
     .title{font-size:19px;font-weight:700;margin:0 0 4px;font-family:"Playfair Display",serif;color:var(--accent2)}
@@ -51,7 +56,7 @@
     .badges{display:flex;gap:8px;flex-wrap:wrap}
 
     .toolbar{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-    .btn{background:#f5ead7;border:1px solid #d0c4b0;color:var(--accent2);padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:600;box-shadow:var(--shadow)}
+    .btn{background:#f5ead7;border:1px solid #d0c4b0;color:var(--accent2);padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:600;box-shadow:var(--shadow);cursor:pointer}
     .btn:hover{background:#e7dac4}
 
     footer{margin:40px 0 60px;color:var(--muted);font-size:14px;text-align:center}
@@ -129,6 +134,8 @@
     </div>
 
     <section id="list" class="grid" aria-live="polite"></section>
+    <!-- Zone de fiche détaillée -->
+    <section id="detail" class="section" hidden></section>
 
     <section class="section" id="apropos">
       <h2>À propos</h2>
@@ -147,7 +154,7 @@
     </section>
 
     <footer>
-      Fait avec 🍺 et ☕ — Version 1.0 — Licence CC BY 4.0
+      Fait avec 🍺 et ☕ — Version 1.1 — Licence CC BY 4.0
     </footer>
   </main>
 
@@ -199,28 +206,27 @@
       { name: "PMU (course de valets)", slug: "pmu", summary: "Parie des gorgées sur ton ‘cheval’ (un valet). À chaque couleur tirée, il avance.", players: 2, duration: 20, noise: "moyen", equipment: ["52 cartes"], level: "Débutant", alcohol: "optionnel", steps:["Aligne 4 valets (ligne de départ), prépare 5 paliers.","Retourne des cartes : la couleur fait avancer le valet associé.","Le premier qui franchit le dernier palier gagne."], tips:["Fais les paris d’abord (responsablement)."], tags:["cartes","pari","ambiance"] }
     ];
 
-    // ===== pack v2 (ajouts) =====
-const more = [
-{ name: "Jeu du paquet", slug: "jeu-du-paquet", summary: "Fais tourner un paquet sur le bord de la table. Selon comment il retombe, ça boit.", players: 2, duration: 20, noise: "moyen", equipment: ["paquet (clopes ou cartes)","table"], level: "Débutant", alcohol: "optionnel", steps: ["Place le paquet de profil, 2/3 sur la table, 1/3 dans le vide.","Tape le bord qui dépasse pour le faire tourner (≥ 1/2 tour) et retomber.","Plat = tu bois et rejoues ; sur la tranche = joueur suivant ; haut/bas = tu distribues une gorgée."], tips: ["Variante cumul : tant que tu poses sur un bord, on ajoute +1 gorgée au ‘compte’."], tags: ["adresse","rapide"] },
-{ name: "Le chemin", slug: "le-chemin", summary: "Retourne les cartes palier par palier (1-2-3-2-1) sans te faire renvoyer au début.", players: 2, duration: 25, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps: ["Forme un chemin de cartes face cachée : 1-2-3-2-1.","Tête = retour au palier 1 ; 7 = passe ton tour ; > palier 3 : tu as 2 ‘vies’.", "Partie terminée quand la pioche manque pour reconstituer le chemin."], tips: ["C’est violent : joue en 1v1 si quelqu’un t’énerve (perdant = gros tarif)."], tags: ["cartes","difficile"] },
-{ name: "Le Crocodile", slug: "le-crocodile", summary: "Grand chaos de gobelets et balles : évite de te faire ‘croquer’ par les verres remplis.", players: 4, duration: 40, noise: "fort", equipment: ["2 balles de ping-pong","gobelets","table"], level: "Débutant", alcohol: "optionnel", steps: ["Dispose de nombreux verres au centre (légèrement remplis). 2 balles en jeu.","Les joueurs font rebondir une balle pour la loger dans un verre.","Balle dans un verre plein = tu bois ce verre ; fautes de jeu = bois au centre. Fin : plus de verres."], tips: ["Joue dehors : la table va prendre cher."], tags: ["gobelets","vitesse","ambiance"] },
-{ name: "Menteur", slug: "menteur", summary: "Annonce des cartes face cachée. On te croit… ou on t’appelle menteur.", players: 2, duration: 30, noise: "moyen", equipment: ["52 cartes"], level: "Débutant", alcohol: "optionnel", steps: ["Choisis une hauteur demandée, pose 1+ carte(s) face cachée.","Suivant : ajoute ou dit ‘Menteur’. On révèle et on boit selon le résultat.","Le premier sans carte fait boire ; le dernier avec des cartes finit son verre."], tips: ["Bluffe souvent, ça passe (trop)."], tags: ["cartes","bluff"] },
-{ name: "Michon Michette", slug: "michon-michette", summary: "À ‘Michette’, tourne la main. Être dans la minorité, c’est boire.", players: 3, duration: 15, noise: "fort", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["Tous en cercle, main verticale.","Au ‘Michette’, paume vers le haut ou vers le bas.","Ceux en minorité boivent."], tips: ["Impair, c’est encore mieux."], tags: ["sans matériel","ambiance"] },
-{ name: "Mort subite", slug: "mort-subite", summary: "Compose des paires plus vite que les autres et distribue depuis le pot.", players: 2, duration: 20, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps: ["Sépare cartes ‘sanctions’ (≤6) et ‘jeu’ (≥7).","Chaque manche : on révèle ses cartes jeu en même temps qu’un paquet ‘référence’.","Plus de paires = gagne la manche ; pioche dans le pot pour distribuer autant de gorgées que la valeur."], tips: ["Il faut 2 fois de la chance : au jeu et au pot !"], tags: ["cartes","réflexe"] },
-{ name: "Pim pam Poum", slug: "pim-pam-poum", summary: "PIM, PAM, puis POUM en désignant quelqu’un. Rater le rythme = boire.", players: 2, duration: 20, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["Un joueur dit PIM, le suivant PAM.","Troisième dit POUM en pointant quelqu’un qui reprend à PIM.","Erreur de mot ou de cible = boit."], tips: ["Feinte en disant PAM en montrant quelqu’un… et POUM sur toi-même."], tags: ["sans matériel","rythme"] },
-{ name: "Plus grand", slug: "plus-grand", summary: "Au dé, celui qui a le plus grand nombre boit (départs en duel si égalité).", players: 2, duration: 10, noise: "faible", equipment: ["1 dé"], level: "Débutant", alcohol: "optionnel", steps: ["Chacun lance ; le plus grand boit.","Égalité → départage au dé (peu importe la valeur)."], tips: ["Parfait pour patienter entre deux ‘gros’ jeux."], tags: ["dés","rapide"] },
-{ name: "Pour combien", slug: "pour-combien", summary: "Parie un nombre pour faire un gage ; si on tombe pareil, tu le fais.", players: 2, duration: 10, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["A propose un gage à B : ‘Pour combien… ?’.","B choisit un nombre N ; en même temps, A et B annoncent un nombre entre 1 et N.","Si égalité : B fait le gage ; sinon, rien. Variante : inversion des rôles avec N’ < N."], tips: ["Fixe un max (20) et pense ‘2’ pour clore les débats 😉"], tags: ["sans matériel","pari"] },
-{ name: "Pyramide", slug: "pyramide", summary: "Bluffe avec tes 4 cartes pendant que la pyramide se dévoile (gorgées par étage).", players: 2, duration: 30, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps: ["Monte une pyramide (6-5-4-3-2-1) et distribue 4 cartes par joueur.","À chaque carte retournée, accuse/donne des gorgées selon tes cartes en main (bluff possible).","En fin de pyramide, chacun révèle ses 4 cartes ; erreur = cul-sec."], tips: ["Le 6e étage peut valoir cul-sec : chauffe-toi."], tags: ["cartes","bluff"] },
-{ name: "Rouge ou noir", slug: "rouge-ou-noir", summary: "4 questions crescendo (couleur, plus/moins, intérieur/extérieur, signe) puis un ‘H’.", players: 2, duration: 45, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps: ["Le dealer pose 4 questions successives aux joueurs (1 à 4 gorgées).","Puis dispose 12 cartes en H : on retourne et on boit/donne par étage, la barre centrale = cul-sec.","Variante : 3 colonnes (prendre/donner/les deux)."], tips: ["Évite la violence : limite à 1 gorgée par révélation si besoin."], tags: ["cartes","ambiance"] },
-{ name: "Shot du destin", slug: "shot-du-destin", summary: "3 cartes tirées : rouges +, noires –, Joker = shot. Le destin tranche.", players: 2, duration: 5, noise: "faible", equipment: ["52 cartes"], level: "Débutant", alcohol: "optionnel", steps: ["A tire 3 cartes (ordre A-B-A).","Rouges = points positifs ; noires = négatifs ; on fait le total.","Total >0 : B boit ; <0 : A boit ; 0 : personne. Joker : shot immédiat."], tips: ["Fais 2 manches en inversant l’ordre pour ‘équilibrer le karma’."], tags: ["cartes","hasard","rapide"] },
-{ name: "Tchik-tchack-tchouk", slug: "tchik-tchack-tchouk", summary: "Chifoumi avec ‘confirmation’ directionnelle. Deviner la tête, sinon tu bois.", players: 2, duration: 15, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["Fais un chifoumi (‘Tchik–Tchak–Tchouk’).","Le gagnant ‘pointe’ et redonne ‘Tchik–Tchak–Tchouk’ ; à ‘Tchouk’, il indique une direction.","Si l’autre regarde la même direction 1× : 1 gorgée ; 2× : demi cul-sec."], tips: ["Ne laisse pas deviner ton timing : feinte !"], tags: ["sans matériel","duel"] },
-{ name: "Titanic", slug: "titanic", summary: "Pose des cartes (♣0, ♦1, ♥2, ♠3) sans faire couler le total cible.", players: 2, duration: 15, noise: "moyen", equipment: ["52 cartes (sans têtes)"], level: "Débutant", alcohol: "optionnel", steps: ["Distribue 4 cartes par joueur ; total cible = 2× nb de joueurs (≥9).","À tour de rôle, pose une carte sur le ‘Titanic’ (pot).","Celui qui dépasse le total le ‘coule’ et boit autant que de joueurs."], tips: ["Le croupier = dernier à être monté sur un bateau (ou avec le plus gros glaçon)."], tags: ["cartes","compte"] },
-{ name: "Toc Toc Toc Squiz", slug: "toc-toc-toc-squiz", summary: "Passe la balle imaginaire (‘squiz’), saute (‘bang’), change le sens (‘bing’)… et retiens un thème d’animaux !", players: 2, duration: 45, noise: "fort", equipment: [], level: "Intermédiaire", alcohol: "optionnel", steps: ["Lance : ‘Toc Toc Toc… squiz’ (frappe/‘envoie’ une balle imaginaire).","Options : ‘squiz’ (passe à droite), ‘bang’ (saute un joueur), ‘bing’ (change le sens).","Variante/bonus : à chaque passe, dis un animal sans répéter ; erreur = tu bois."], tips: ["Garde des animaux improbables en tête."], tags: ["sans matériel","rythme","mémoire"] },
-{ name: "Ventes aux enchères", slug: "ventes-aux-encheres", summary: "Anglaise, hollandaise, cachée, payante : remporte le ‘lot’ pour distribuer des gorgées.", players: 2, duration: 5, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["Choisis un mode d’enchère (anglaise, hollandaise, cachée, payante).","Le plus offrant gagne la distribution (ex : 10 gorgées).","Enchaîne des mini-ventes tout au long de la soirée."], tips: ["En ‘payante’, on boit sa mise pour surenchérir. Coûteux… et drôle."], tags: ["ambiance","pari"] }
-];
-
-
-data.push(...more);
+    // ===== pack v2 (ajouts tirés du PDF) =====
+    const more = [
+      { name: "Jeu du paquet", slug: "jeu-du-paquet", summary: "Fais tourner un paquet sur le bord de la table. Selon comment il retombe, ça boit.", players: 2, duration: 20, noise: "moyen", equipment: ["paquet (clopes ou cartes)","table"], level: "Débutant", alcohol: "optionnel", steps: ["Place le paquet de profil, 2/3 sur la table, 1/3 dans le vide.","Tape le bord qui dépasse pour le faire tourner (≥ 1/2 tour) et retomber.","Plat = tu bois et rejoues ; sur la tranche = joueur suivant ; haut/bas = tu distribues une gorgée."], tips: ["Variante cumul : tant que tu poses sur un bord, on ajoute +1 gorgée au ‘compte’."], tags: ["adresse","rapide"] },
+      { name: "Le chemin", slug: "le-chemin", summary: "Retourne les cartes palier par palier (1-2-3-2-1) sans te faire renvoyer au début.", players: 2, duration: 25, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps: ["Forme un chemin de cartes face cachée : 1-2-3-2-1.","Tête = retour au palier 1 ; 7 = passe ton tour ; > palier 3 : tu as 2 ‘vies’.", "Partie terminée quand la pioche manque pour reconstituer le chemin."], tips: ["C’est violent : joue en 1v1 si quelqu’un t’énerve (perdant = gros tarif)."], tags: ["cartes","difficile"] },
+      { name: "Le Crocodile", slug: "le-crocodile", summary: "Grand chaos de gobelets et balles : évite de te faire ‘croquer’ par les verres remplis.", players: 4, duration: 40, noise: "fort", equipment: ["2 balles de ping-pong","gobelets","table"], level: "Débutant", alcohol: "optionnel", steps: ["Dispose de nombreux verres au centre (légèrement remplis). 2 balles en jeu.","Les joueurs font rebondir une balle pour la loger dans un verre.","Balle dans un verre plein = tu bois ce verre ; fautes de jeu = bois au centre. Fin : plus de verres."], tips: ["Joue dehors : la table va prendre cher."], tags: ["gobelets","vitesse","ambiance"] },
+      { name: "Menteur", slug: "menteur", summary: "Annonce des cartes face cachée. On te croit… ou on t’appelle menteur.", players: 2, duration: 30, noise: "moyen", equipment: ["52 cartes"], level: "Débutant", alcohol: "optionnel", steps: ["Choisis une hauteur demandée, pose 1+ carte(s) face cachée.","Suivant : ajoute ou dit ‘Menteur’. On révèle et on boit selon le résultat.","Le premier sans carte fait boire ; le dernier avec des cartes finit son verre."], tips: ["Bluffe souvent, ça passe (trop)."], tags: ["cartes","bluff"] },
+      { name: "Michon Michette", slug: "michon-michette", summary: "À ‘Michette’, tourne la main. Être dans la minorité, c’est boire.", players: 3, duration: 15, noise: "fort", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["Tous en cercle, main verticale.","Au ‘Michette’, paume vers le haut ou vers le bas.","Ceux en minorité boivent."], tips: ["Impair, c’est encore mieux."], tags: ["sans matériel","ambiance"] },
+      { name: "Mort subite", slug: "mort-subite", summary: "Compose des paires plus vite que les autres et distribue depuis le pot.", players: 2, duration: 20, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps: ["Sépare cartes ‘sanctions’ (≤6) et ‘jeu’ (≥7).","Chaque manche : on révèle ses cartes jeu en même temps qu’un paquet ‘référence’.","Plus de paires = gagne la manche ; pioche dans le pot pour distribuer autant de gorgées que la valeur."], tips: ["Il faut 2 fois de la chance : au jeu et au pot !"], tags: ["cartes","réflexe"] },
+      { name: "Pim pam Poum", slug: "pim-pam-poum", summary: "PIM, PAM, puis POUM en désignant quelqu’un. Rater le rythme = boire.", players: 2, duration: 20, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["Un joueur dit PIM, le suivant PAM.","Troisième dit POUM en pointant quelqu’un qui reprend à PIM.","Erreur de mot ou de cible = boit."], tips: ["Feinte en disant PAM en montrant quelqu’un… et POUM sur toi-même."], tags: ["sans matériel","rythme"] },
+      { name: "Plus grand", slug: "plus-grand", summary: "Au dé, celui qui a le plus grand nombre boit (départs en duel si égalité).", players: 2, duration: 10, noise: "faible", equipment: ["1 dé"], level: "Débutant", alcohol: "optionnel", steps: ["Chacun lance ; le plus grand boit.","Égalité → départage au dé (peu importe la valeur)."], tips: ["Parfait pour patienter entre deux ‘gros’ jeux."], tags: ["dés","rapide"] },
+      { name: "Pour combien", slug: "pour-combien", summary: "Parie un nombre pour faire un gage ; si on tombe pareil, tu le fais.", players: 2, duration: 10, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["A propose un gage à B : ‘Pour combien… ?’.","B choisit un nombre N ; en même temps, A et B annoncent un nombre entre 1 et N.","Si égalité : B fait le gage ; sinon, rien. Variante : inversion des rôles avec N’ < N."], tips: ["Fixe un max (20) et pense ‘2’ pour clore les débats 😉"], tags: ["sans matériel","pari"] },
+      { name: "Pyramide", slug: "pyramide", summary: "Bluffe avec tes 4 cartes pendant que la pyramide se dévoile (gorgées par étage).", players: 2, duration: 30, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps: ["Monte une pyramide (6-5-4-3-2-1) et distribue 4 cartes par joueur.","À chaque carte retournée, accuse/donne des gorgées selon tes cartes en main (bluff possible).","En fin de pyramide, chacun révèle ses 4 cartes ; erreur = cul-sec."], tips: ["Le 6e étage peut valoir cul-sec : chauffe-toi."], tags: ["cartes","bluff"] },
+      { name: "Rouge ou noir", slug: "rouge-ou-noir", summary: "4 questions crescendo (couleur, plus/moins, intérieur/extérieur, signe) puis un ‘H’.", players: 2, duration: 45, noise: "moyen", equipment: ["52 cartes"], level: "Intermédiaire", alcohol: "optionnel", steps: ["Le dealer pose 4 questions successives aux joueurs (1 à 4 gorgées).","Puis dispose 12 cartes en H : on retourne et on boit/donne par étage, la barre centrale = cul-sec.","Variante : 3 colonnes (prendre/donner/les deux)."], tips: ["Évite la violence : limite à 1 gorgée par révélation si besoin."], tags: ["cartes","ambiance"] },
+      { name: "Shot du destin", slug: "shot-du-destin", summary: "3 cartes tirées : rouges +, noires –, Joker = shot. Le destin tranche.", players: 2, duration: 5, noise: "faible", equipment: ["52 cartes"], level: "Débutant", alcohol: "optionnel", steps: ["A tire 3 cartes (ordre A-B-A).","Rouges = points positifs ; noires = négatifs ; on fait le total.","Total >0 : B boit ; <0 : A boit ; 0 : personne. Joker : shot immédiat."], tips: ["Fais 2 manches en inversant l’ordre pour ‘équilibrer le karma’."], tags: ["cartes","hasard","rapide"] },
+      { name: "Tchik-tchack-tchouk", slug: "tchik-tchack-tchouk", summary: "Chifoumi avec ‘confirmation’ directionnelle. Deviner la tête, sinon tu bois.", players: 2, duration: 15, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["Fais un chifoumi (‘Tchik–Tchak–Tchouk’).","Le gagnant ‘pointe’ et redonne ‘Tchik–Tchak–Tchouk’ ; à ‘Tchouk’, il indique une direction.","Si l’autre regarde la même direction 1× : 1 gorgée ; 2× : demi cul-sec."], tips: ["Ne laisse pas deviner ton timing : feinte !"], tags: ["sans matériel","duel"] },
+      { name: "Titanic", slug: "titanic", summary: "Pose des cartes (♣0, ♦1, ♥2, ♠3) sans faire couler le total cible.", players: 2, duration: 15, noise: "moyen", equipment: ["52 cartes (sans têtes)"], level: "Débutant", alcohol: "optionnel", steps: ["Distribue 4 cartes par joueur ; total cible = 2× nb de joueurs (≥9).","À tour de rôle, pose une carte sur le ‘Titanic’ (pot).","Celui qui dépasse le total le ‘coule’ et boit autant que de joueurs."], tips: ["Le croupier = dernier à être monté sur un bateau (ou avec le plus gros glaçon)."], tags: ["cartes","compte"] },
+      { name: "Toc Toc Toc Squiz", slug: "toc-toc-toc-squiz", summary: "Passe la balle imaginaire (‘squiz’), saute (‘bang’), change le sens (‘bing’)… et retiens un thème d’animaux !", players: 2, duration: 45, noise: "fort", equipment: [], level: "Intermédiaire", alcohol: "optionnel", steps: ["Lance : ‘Toc Toc Toc… squiz’ (frappe/‘envoie’ une balle imaginaire).","Options : ‘squiz’ (passe à droite), ‘bang’ (saute un joueur), ‘bing’ (change le sens).","Variante/bonus : à chaque passe, dis un animal sans répéter ; erreur = tu bois."], tips: ["Garde des animaux improbables en tête."], tags: ["sans matériel","rythme","mémoire"] },
+      { name: "Ventes aux enchères", slug: "ventes-aux-encheres", summary: "Anglaise, hollandaise, cachée, payante : remporte le ‘lot’ pour distribuer des gorgées.", players: 2, duration: 5, noise: "moyen", equipment: [], level: "Débutant", alcohol: "optionnel", steps: ["Choisis un mode d’enchère (anglaise, hollandaise, cachée, payante).","Le plus offrant gagne la distribution (ex : 10 gorgées).","Enchaîne des mini-ventes tout au long de la soirée."], tips: ["En ‘payante’, on boit sa mise pour surenchérir. Coûteux… et drôle."], tags: ["ambiance","pari"] }
+    ];
+    
+    data.push(...more);
 
     // ===== Sélecteurs & état =====
     const list = document.getElementById('list');
@@ -233,7 +239,7 @@ data.push(...more);
     const durationChecks = document.querySelectorAll('input[name="duration"]');
     const matChecks = document.querySelectorAll('input[name="mat"]');
 
-    // Éphéméride — phrases du jour (échantillon, tu peux en mettre 366)
+    // Éphéméride — phrases du jour (échantillon)
     const ephemeridePhrases = [
       "La meilleure règle du bar : on s'amuse, on partage.",
       "Aujourd'hui, on découvre un nouveau jeu.",
@@ -307,12 +313,19 @@ data.push(...more);
         pills.forEach(p=>{ const span=document.createElement('span'); span.className='pill'; span.textContent=p; meta.appendChild(span); });
 
         const steps = node.querySelector('.steps');
-        g.steps.forEach(s=>{const li=document.createElement('li');li.textContent=s;steps.appendChild(li)});
+        (g.steps||[]).forEach(s=>{const li=document.createElement('li');li.textContent=s;steps.appendChild(li)});
 
         const badges = node.querySelector('.badges');
         const equip = document.createElement('span'); equip.className='pill'; equip.textContent = `Matériel : ${g.equipment.join(', ')||'—'}`; badges.appendChild(equip);
-        const alcohol = document.createElement('span'); alcohol.className='pill'; alcohol.textContent = `Alcool : ${g.alcohol}`; badges.appendChild(alcohol);
-        const tags = document.createElement('span'); tags.className='pill'; tags.textContent = `Tags : ${g.tags.join(', ')}`; badges.appendChild(tags);
+        const alcohol = document.createElement('span'); alcohol.className='pill'; alcohol.textContent = `Alcool : ${g.alcohol||'optionnel'}`; badges.appendChild(alcohol);
+        const tags = document.createElement('span'); tags.className='pill'; tags.textContent = `Tags : ${(g.tags||[]).join(', ')}`; badges.appendChild(tags);
+
+        // Lien Fiche détaillée
+        const more = document.createElement('a');
+        more.className = 'btn';
+        more.href = '#jeu/' + slug;
+        more.textContent = 'Fiche détaillée';
+        article.appendChild(more);
 
         list.appendChild(node);
       });
@@ -327,7 +340,7 @@ data.push(...more);
       const msel = Array.from(document.querySelectorAll('input[name="mat"]:checked')).map(i=>i.value);
 
       const items = data.filter(g=>{
-        const hay = [g.name, g.summary, g.tags.join(' '), g.equipment.join(' '), g.level].join(' ').toLowerCase();
+        const hay = [g.name, g.summary, (g.tags||[]).join(' '), (g.equipment||[]).join(' '), g.level].join(' ').toLowerCase();
         const qok = !query || hay.includes(query);
         const pok = psel.length===0 || psel.some(v=> g.players >= v);
         const dok = dsel.length===0 || dsel.includes(durationBucket(g.duration));
@@ -353,7 +366,7 @@ data.push(...more);
       updateSummary('materialSummary', m);
     }
 
-    // Listeners
+    // Listeners filtres
     q.addEventListener('input', ()=>{ filter(); });
     playerChecks.forEach(el=>el.addEventListener('change', ()=>{ updateAllSummaries(); filter(); }));
     durationChecks.forEach(el=>el.addEventListener('change', ()=>{ updateAllSummaries(); filter(); }));
@@ -364,7 +377,7 @@ data.push(...more);
       document.querySelectorAll('details.multi[open]').forEach(d=>{ if(!d.contains(e.target)) d.removeAttribute('open'); });
     });
 
-    // Jeu aléatoire
+    // Jeu aléatoire (surbrillance incluse)
     randomBtn.addEventListener('click', ()=>{
       const pool = lastResults.length ? lastResults : data;
       if(!pool.length) return;
@@ -372,6 +385,8 @@ data.push(...more);
       const slug = (pick.slug || pick.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'));
       const el = document.querySelector(`[data-slug="${slug}"]`);
       if(el){ el.classList.add('highlight'); el.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(()=>el.classList.remove('highlight'), 2000); }
+      // Si on est en vue détail, on redirige vers la fiche
+      if(!el){ location.hash = '#jeu/' + slug; }
     });
 
     // Clic logo = reset filtres & haut de page
@@ -384,105 +399,72 @@ data.push(...more);
       window.scrollTo({top:0,behavior:'smooth'});
     });
 
+    // ===== "Pages" de détail =====
+    const controls = document.querySelector('.controls');
+    const toolbar  = document.querySelector('.toolbar');
+    const detail   = document.getElementById('detail');
+
+    function slugify(t){ return (t||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+
+    function ficheHTML(g){
+      const equip = (g.equipment||[]).join(', ') || '—';
+      const tags  = (g.tags||[]).join(', ');
+      const tips  = (g.tips||[]).map(t=>`<li>${t}</li>`).join('') || '<li>Amusez-vous bien ✨</li>';
+      const steps = (g.steps||[]).map(s=>`<li>${s}</li>`).join('') || '<li>Pas de règles… c’est freestyle.</li>';
+      return `
+        <a class="btn" href="#" id="backBtn">← Retour à la liste</a>
+        <h2 style="margin-top:10px">${g.name}</h2>
+        <p class="desc" style="margin:6px 0 14px">${g.summary||''}</p>
+        <div class="meta" style="margin-bottom:10px">
+          <span class="pill">${g.players}+ joueurs</span>
+          <span class="pill">${g.duration} min</span>
+          <span class="pill">Niveau : ${g.level||'—'}</span>
+        </div>
+        <div class="badges" style="margin-bottom:14px">
+          <span class="pill">Matériel : ${equip}</span>
+          <span class="pill">Alcool : ${g.alcohol||'optionnel'}</span>
+          <span class="pill">Tags : ${tags}</span>
+        </div>
+        <h3>Règles détaillées</h3>
+        <ol class="steps">${steps}</ol>
+        <h3>Conseils</h3>
+        <ul>${tips}</ul>
+        <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+          <a class="btn" href="#jeu/${g.slug||slugify(g.name)}">Partager cette fiche</a>
+          <a class="btn" href="#" id="randomFromDetail">Jeu aléatoire</a>
+        </div>
+      `;
+    }
+
+    function showDetail(g){
+      controls.hidden = true; toolbar.hidden  = true; list.hidden = true;
+      detail.hidden   = false; detail.innerHTML = ficheHTML(g);
+      detail.querySelector('#backBtn').addEventListener('click', (e)=>{ e.preventDefault(); location.hash = ''; });
+      const rnd = detail.querySelector('#randomFromDetail');
+      if(rnd){ rnd.addEventListener('click', (e)=>{ e.preventDefault(); const pick = data[Math.floor(Math.random()*data.length)]; location.hash = '#jeu/' + (pick.slug || slugify(pick.name)); }); }
+    }
+
+    function goHome(){
+      detail.hidden = true; controls.hidden = false; toolbar.hidden = false; list.hidden = false;
+      if(!list.children.length) render(data);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function resolveBySlug(s){ return data.find(g => (g.slug || slugify(g.name)) === s); }
+
+    function onHashChange(){
+      const m = location.hash.match(/^#jeu\/(.+)$/);
+      if(m){ const slug = decodeURIComponent(m[1]); const g = resolveBySlug(slug); if(g){ showDetail(g); return; } }
+      goHome();
+    }
+
+    window.addEventListener('hashchange', onHashChange);
+
     // Init
     render(data);
     updateAllSummaries();
     renderEphemeride();
-
-// ===== "Pages" de détail =====
-const controls = document.querySelector('.controls');
-const toolbar = document.querySelector('.toolbar');
-const detail = document.getElementById('detail');
-
-function slugify(t){ return (t||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
-
-function ficheHTML(g){
-  const equip = g.equipment.join(', ') || '—';
-  const tags = (g.tags||[]).join(', ');
-  const tips = (g.tips||[]).map(t=>`<li>${t}</li>`).join('') || '<li>Amusez-vous bien ✨</li>';
-  const steps = (g.steps||[]).map(s=>`<li>${s}</li>`).join('') || '<li>Pas de règles… c’est freestyle.</li>';
-  return `
-    <a class="btn" href="#" id="backBtn">← Retour à la liste</a>
-    <h2 style="margin-top:10px">${g.name}</h2>
-    <p class="desc" style="margin:6px 0 14px">${g.summary||''}</p>
-    <div class="meta" style="margin-bottom:10px">
-      <span class="pill">${g.players}+ joueurs</span>
-      <span class="pill">${g.duration} min</span>
-      <span class="pill">Niveau : ${g.level||'—'}</span>
-    </div>
-    <div class="badges" style="margin-bottom:14px">
-      <span class="pill">Matériel : ${equip}</span>
-      <span class="pill">Alcool : ${g.alcohol||'optionnel'}</span>
-      <span class="pill">Tags : ${tags}</span>
-    </div>
-    <h3>Règles détaillées</h3>
-    <ol class="steps">${steps}</ol>
-    <h3>Conseils</h3>
-    <ul>${tips}</ul>
-    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
-      <a class="btn" href="#jeu/${g.slug||slugify(g.name)}">Partager cette fiche</a>
-      <a class="btn" href="#" id="randomFromDetail">Jeu aléatoire</a>
-    </div>
-  `;
-}
-
-function showDetail(g){
-  // masque la vue liste + filtres
-  controls.hidden = true;
-  toolbar.hidden = true;
-  list.hidden = true;
-
-  // affiche la fiche
-  detail.hidden = false;
-  detail.innerHTML = ficheHTML(g);
-
-  // actions locales
-  detail.querySelector('#backBtn').addEventListener('click', (e)=>{
-    e.preventDefault();
-    location.hash = ''; // retour
-  });
-  const rnd = detail.querySelector('#randomFromDetail');
-  if(rnd){
-    rnd.addEventListener('click', (e)=>{
-      e.preventDefault();
-      const pool = data; // tu peux prendre lastResults si tu veux respecter les filtres
-      const pick = pool[Math.floor(Math.random()*pool.length)];
-      location.hash = '#jeu/' + (pick.slug || slugify(pick.name));
-    });
-  }
-}
-
-function goHome(){
-  // montre la vue liste + filtres
-  detail.hidden = true;
-  controls.hidden = false;
-  toolbar.hidden = false;
-  list.hidden = false;
-  // assure que la liste est visible (utile si on est arrivé par un lien direct)
-  if(!list.children.length) render(data);
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function resolveBySlug(s){
-  return data.find(g => (g.slug || slugify(g.name)) === s);
-}
-
-function onHashChange(){
-  const m = location.hash.match(/^#jeu\/(.+)$/);
-  if(m){
-    const slug = decodeURIComponent(m[1]);
-    const g = resolveBySlug(slug);
-    if(g) { showDetail(g); return; }
-  }
-  goHome();
-}
-
-window.addEventListener('hashchange', onHashChange);
-// ouvrir directement une fiche si l’URL en contient une
-onHashChange();
-
-
-    
+    onHashChange(); // ouvre une fiche si l’URL en contient une
   </script>
 </body>
 </html>
